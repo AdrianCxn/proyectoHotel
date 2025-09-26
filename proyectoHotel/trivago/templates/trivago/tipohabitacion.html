@@ -15,10 +15,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="{% static 'trivago/rest_style.css' %}">
-	<title>Tipo de habitación</title>
-</head>
-
-</script>
+	<title>Tipo de habitacion</title>
 </head>
 
 <body>
@@ -27,14 +24,12 @@
 		<div class="preload-wave"></div>
 	</div>
 
-
-	{# Incluye el contenido de index.html usando Django Template #}
 	{% include 'trivago/index.html' %}
 
 	<div class="image">
 		<img src="https://www.zeysey.com/storage/image/project/01HT8QFH9KK6RK1J3Q6GKPD5VM.jpg"
 			alt="Titulo">
-		<h1 class="titulo2">Tipo Habitación</h1>
+		<h1 class="titulo2">Habitaciones</h1>
 	</div>
 
 	<div class="container-xl">
@@ -43,45 +38,45 @@
 				<div class="table-title">
 					<div class="row">
 						<div class="col-sm-6">
-							<h2><b>Reservas</b></h2>
+							<h2><b>Tipos de Habitacion</b></h2>
 						</div>
-						<div class="col-sm-6">
-							<a href="#addEmployeeModal" class="btn btn-primary" data-toggle="modal"><i
-									class="material-icons">&#xE147;</i> <span>Agregar nuevo</span></a>
-
-						</div>
+						
 					</div>
 				</div>
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th>ID</th>
-							<th>A cargo de</th>
-							<th>Huesped</th>
-							<th>Cant.Personas</th>
-							<th>Cant.Personas</th>
-							<th>Fecha y hora</th>
-							<th>Activa</th>
+							<th>Tipo</th>
+							<th>Camas</th>
+							<th>Baños</th>
+							<th>Max Adultos</th>
+							<th>Max Niños</th>
+							<th>Cocineta</th>
+                            <th>Televisor</th>
+                            <th>Vista</th>
+                            <th>Precio</th>
 							<th></th>
-
 						</tr>
 					</thead>
 					<tbody>
-
-						{# Itera sobre las reservas pasadas desde la vista de Django #}
+						
+                        
 						{% for reserva in reservas %}
 						<tr>
-							<td>{{ reserva.id }}</td>
-							<td>{{ reserva.a_cargo_de }}</td>
-							<td>{{ reserva.huesped }}</td>
-							<td>{{ reserva.cant_personas }}</td>
-							<td>{{ reserva.cant_personas }}</td>
-							<td>{{ reserva.fecha_hora }}</td>
-							<td>{{ reserva.activa }}</td>
+							<td>{{ reserva.tipo }}</td>
+							<td>{{ reserva.camas }}</td>
+							<td>{{ reserva.baños }}</td>
+							<td>{{ reserva.max_adultos }}</td>
+							<td>{{ reserva.max_ninios }}</td>
+							<td>{{ reserva.cocineta}}</td>
+							<td>{{ reserva.televisor}}</td>
+							<td>{{ reserva.vista}}</td>
+							<td>{{ reserva.precio}}</td>
+							
 							<td>
-								<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons"
+								<a href="#Editar" class="edit" data-toggle="modal"><i class="material-icons"
 										data-toggle="tooltip" title="Editar">&#xE254;</i></a>
-								<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
+								<a href="#Eliminar" class="delete" data-toggle="modal"><i
 										class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i></a>
 							</td>
 						</tr>
@@ -105,42 +100,7 @@
 		</div>
 	</div>
 	<!-- Editar HTML -->
-	<div id="addEmployeeModal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form>
-					<div class="modal-header">
-						<h4 class="modal-title">Añadir</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<label>Name</label>
-							<input type="text" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label>Email</label>
-							<input type="email" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label>Address</label>
-							<textarea class="form-control" required></textarea>
-						</div>
-						<div class="form-group">
-							<label>Phone</label>
-							<input type="text" class="form-control" required>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-						<input type="submit" class="btn btn-success" value="Agregar">
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<!-- Edit Modal HTML -->
-	<div id="editEmployeeModal" class="modal fade">
+	<div id="Editar" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<form>
@@ -174,8 +134,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- Delete Modal HTML -->
-	<div id="deleteEmployeeModal" class="modal fade">
+	<!-- Eliminar HTML -->
+	<div id="Eliminar" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<form>
@@ -195,5 +155,4 @@
 		</div>
 	</div>
 </body>
-
 </html>
