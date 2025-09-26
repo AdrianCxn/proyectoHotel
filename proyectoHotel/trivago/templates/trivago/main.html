@@ -1,0 +1,11 @@
+{% extends 'trivago/layout.html' %}
+
+{% block body %}
+<h1>Main</h1>
+<h2>Ahora imprimire los tipos</h2>
+{% for tipo in tipos %}
+    <h2>Tipo</h2>
+{% empty %}
+    <h2>No hay tipos</h2>
+{% endfor %}
+{% endblock %}
