@@ -11,3 +11,7 @@ def main(request):
 
 def restaurante(request):
     return render(request, "trivago/restaurante.html")
+
+
+def tipohabitacion(request):
+    return render(request, "trivago/tipohabitacion.html")
