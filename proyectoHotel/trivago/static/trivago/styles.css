@@ -7,7 +7,7 @@ ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    background-color: #0f6310;
+    background-color: #000000;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -42,7 +42,7 @@ li a, .dropbtn {
 }
 
 li a:hover, .dropdown:hover .dropbtn {
-  background-color: rgb(4, 48, 17);
+  background-color: rgb(61, 63, 61);
 }
 
 li.dropdown {
@@ -54,7 +54,7 @@ li.dropdown {
   position: absolute;
   background-color: white;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
