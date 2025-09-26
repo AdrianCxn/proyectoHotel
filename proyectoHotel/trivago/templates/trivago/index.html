@@ -20,25 +20,25 @@
                     <a href="javascript:void(0)" class="dropbtn">Habitaciones</a>
                     <div class="dropdown-content">
                         <a href="{% url 'tipohabitacion' %}">Tipo de habitación</a>
-                        <a href="#">Habitaciones</a>
+                        <a href="{% url 'habitaciones' %}">Habitaciones</a>
                     </div>
 
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">Administracion</a>
                     <div class="dropdown-content">
-                        <a href="#">Staff</a>
-                        <a href="#">Descuentos</a>
-                        <a href="#">Huespedes</a>
-                        <a href="#">Reservas</a>
-                        <a href="#">Consumos</a>
+                        <a href="{% url 'staff' %}">Staff</a>
+                        <a href="{% url 'descuentos' %}">Descuentos</a>
+                        <a href="{% url 'huespedes' %}">Huespedes</a>
+                        <a href="{% url 'reservas' %}">Reservas</a>
+                        <a href="{% url 'consumos' %}">Consumos</a>
                     </div>
                 <li><a href="{% url 'restaurante' %}">Restaurante</a></li>
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">Productos</a>
                     <div class="dropdown-content">
-                        <a href="#">Productos</a>
-                        <a href="#">Inventario</a>
-                        <a href="#">Distribuidores</a>
+                        <a href="{% url 'productos' %}">Productos</a>
+                        <a href="{% url 'inventario' %}">Inventario</a>
+                        <a href="{% url 'distribuidores' %}">Distribuidores</a>
                     </div>
             </div>
             <div class="opciones2">
