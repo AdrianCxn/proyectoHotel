@@ -6,10 +6,8 @@ from .models import Tipos
 # Create your views here.
 def main(request):
     tipos = Tipos.objects.all()
-    return render(request, "trivago/main.html", {
-        'tipos': tipos
-    })
+    return render(request, "trivago/index.html")
 
 
-def ejemplo(request):
-    return render(request, "trivago/ejemplo.html")
+def restaurante(request):
+    return render(request, "trivago/restaurante.html")
