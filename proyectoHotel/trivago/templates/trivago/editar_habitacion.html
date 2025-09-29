@@ -6,15 +6,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/cFzss?family=Roboto|Varela+Round">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="{% static 'trivago/rest_style.css' %}">
-	<title>Registro Habitaciones</title>
+	<title>Editar | Habitaciones</title>
 </head>
 
 <body>
@@ -26,11 +19,33 @@
 	{% include 'trivago/index.html' %}
 
 	<div class="image">
-		<img src="https://www.zeysey.com/storage/image/project/01HT8QFH9KK6RK1J3Q6GKPD5VM.jpg"
-			alt="Titulo">
-		<h1 class="titulo2">Editar habitación ID {{ habitacion.id_habitacion }}</h1>
+		<img src="https://www.zeysey.com/storage/image/project/01HT8QFH9KK6RK1J3Q6GKPD5VM.jpg" alt="Titulo">
+		<h1 class="titulo2">Editar habitación {{ habitacion.numero }}</h1>
 	</div>
 
-	
+	<form method="post" class="mb-4">
+		<div class="mb-3">
+			<label class="form-label">Número de habitación</label>
+			<input type="text" name="num_habitacion" maxlength="3" pattern="[0-9]+" class="form-control" placeholder="Ej. 101"
+				required>
+		</div>
 
+		<div class="mb-3">
+			<label class="form-label">Piso</label>
+			<input type="text" name="piso_habitacion" maxlength="2" pattern="[0-9]+" class="form-control" placeholder="Ej. 1" required>
+		</div>
+
+		<div class="mb-3">
+			<label class="form-label">Tipo</label>
+				<select name="opciones" id="opc">
+					<option value="1">Sencilla</option>
+					<option value="2">Duplex</option>
+					<option value="3">Familiar</option>
+					<option value="4">Suit</option>
+				</select>
+		</div>
+
+		<a href="{% url 'habitaciones' %}" class="btn btn-secondary">Cancelar</a> 
+		<button type="submit" class="btn btn-primary">Aplicar cambios</button> 
+	</form>
 </html>
