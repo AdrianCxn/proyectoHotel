@@ -1,7 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
+from django.db import IntegrityError
 
-from .models import Tipos
+from .models import Habitaciones, Tipos
 
 # Create your views here.
 # Vista para index
@@ -16,7 +18,77 @@ def tipohabitacion(request):
 
 
 def habitaciones(request):
-    return render(request, "trivago/habitaciones.html")
+    habitaciones = Habitaciones.objects.all()
+    return render(request, "trivago/habitaciones.html", {
+        "habitaciones": habitaciones
+    })
+
+
+def agregar_habitacion(request):
+    if request.method == "POST":
+        numero = request.POST.get("numero")
+        piso = request.POST.get("piso")
+        id_tipo = request.POST.get("id_tipo")
+        ocupado = request.POST.get("ocupado", 0)
+
+        try:
+            tipo = Tipos.objects.get(tipo=id_tipo)
+            nueva_habitacion = Habitaciones(
+                numero=numero,
+                piso=piso,
+                id_tipo=tipo,
+                ocupado=ocupado
+            )
+            nueva_habitacion.save()
+            messages.success(request, "Habitación agregada exitosamente.")
+        except Tipos.DoesNotExist:
+            messages.error(request, "El tipo de habitación no existe.")
+        except IntegrityError:
+            messages.error(request, "Error: El número de habitación ya existe.")
+        except Exception as e:
+            messages.error(request, f"Error al agregar la habitación: {e}")
+
+    return render(request, "trivago/agregar_habitacion.html")
+
+
+def editar_habitacion(request, id):
+    habitacion = get_object_or_404(Habitaciones, pk=id)
+
+    if request.method == "POST":
+        habitacion.numero = request.POST.get("numero")
+        habitacion.piso = request.POST.get("piso")
+        id_tipo = request.POST.get("id_tipo")
+        habitacion.ocupado = request.POST.get("ocupado", 0)
+
+        try:
+            tipo = Tipos.objects.get(tipo=id_tipo)
+            habitacion.id_tipo = tipo
+            habitacion.save()
+            messages.success(request, "Habitación actualizada exitosamente.")
+        except Tipos.DoesNotExist:
+            messages.error(request, "El tipo de habitación no existe.")
+        except IntegrityError:
+            messages.error(request, "Error: El número de habitación ya existe.")
+        except Exception as e:
+            messages.error(request, f"Error al actualizar la habitación: {e}")
+
+    return render(request, "trivago/editar_habitacion.html", {
+        "habitacion": habitacion
+    })
+
+
+def eliminar_habitacion(request, id):
+    habitacion = get_object_or_404(Habitaciones, pk=id)
+
+    if request.method == "POST":
+        try:
+            habitacion.delete()
+            messages.success(request, "Habitación eliminada exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar la habitación: {e}")
+        return redirect("habitaciones")
+    else:
+        return redirect("habitaciones")
 
 
 # Vistas para administracion

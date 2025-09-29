@@ -6,6 +6,9 @@ urlpatterns = [
     # Paths para habitaciones
     path('tipohabitacion/', views.tipohabitacion, name='tipohabitacion'),
     path('habitaciones/', views.habitaciones, name='habitaciones'),
+    path('agregar_habitacion/', views.agregar_habitacion, name='agregar_habitacion'),
+    path('editar_habitacion/<int:id>/', views.editar_habitacion, name='editar_habitacion'),
+    path('eliminar_habitacion/<int:id>/', views.eliminar_habitacion, name='eliminar_habitacion'),
     # Paths para administracion
     path('staff/', views.staff, name='staff'),
     path('descuentos/', views.descuentos, name='descuentos'),
