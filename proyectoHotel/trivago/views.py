@@ -1,8 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-
 from .models import Habitaciones, Tipos
 
 # Create your views here.
@@ -11,11 +10,9 @@ def index(request):
     tipos = Tipos.objects.all()
     return render(request, "trivago/index.html")
 
-
 # Vistas para habitaciones
 def tipohabitacion(request):
     return render(request, "trivago/tipohabitacion.html")
-
 
 def habitaciones(request):
     habitaciones = Habitaciones.objects.all()
@@ -23,8 +20,9 @@ def habitaciones(request):
         "habitaciones": habitaciones
     })
 
-
 def agregar_habitacion(request):
+    tipos = Tipos.objects.all()
+    
     if request.method == "POST":
         numero = request.POST.get("numero")
         piso = request.POST.get("piso")
@@ -32,7 +30,7 @@ def agregar_habitacion(request):
         ocupado = request.POST.get("ocupado", 0)
 
         try:
-            tipo = Tipos.objects.get(tipo=id_tipo)
+            tipo = Tipos.objects.get(id_tipo=id_tipo)  # usar id_tipo
             nueva_habitacion = Habitaciones(
                 numero=numero,
                 piso=piso,
@@ -41,6 +39,7 @@ def agregar_habitacion(request):
             )
             nueva_habitacion.save()
             messages.success(request, "Habitación agregada exitosamente.")
+            return redirect('habitaciones')
         except Tipos.DoesNotExist:
             messages.error(request, "El tipo de habitación no existe.")
         except IntegrityError:
@@ -48,13 +47,8 @@ def agregar_habitacion(request):
         except Exception as e:
             messages.error(request, f"Error al agregar la habitación: {e}")
 
-    return render(request, "trivago/agregar_habitacion.html")
+    return render(request, "trivago/agregar_habitacion.html", {'tipos': tipos})
 
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.db import IntegrityError
-from django.contrib import messages
-from .models import Habitaciones, Tipos
 
 def editar_habitacion(request, id):
     habitacion = get_object_or_404(Habitaciones, pk=id)
@@ -71,7 +65,7 @@ def editar_habitacion(request, id):
             habitacion.ocupado = True if ocupado == "1" else False
             habitacion.save()
             messages.success(request, "Habitación actualizada exitosamente.")
-            return redirect("habitaciones")
+
         except IntegrityError:
             messages.error(request, "Error: El número de habitación ya existe.")
         except Exception as e:
