@@ -46,7 +46,7 @@
 					<td>{{ habitacion.numero }}</td>
 					<td>{{ habitacion.piso }}</td>
 					<td>{{ habitacion.id_tipo.tipo }}</td>
-					<td>{% if habitacion.ocupado %}Sí{% else %}No{% endif %}</td>
+					<td>{% if habitacion.ocupado %}Ocupado{% else %}Disponible{% endif %}</td>
 					<td>
 						<a class="btn btn-primary" href="{% url 'editar_habitacion' habitacion.id_habitacion %}">Editar</a>
 

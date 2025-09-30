@@ -51,29 +51,35 @@ def agregar_habitacion(request):
     return render(request, "trivago/agregar_habitacion.html")
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db import IntegrityError
+from django.contrib import messages
+from .models import Habitaciones, Tipos
+
 def editar_habitacion(request, id):
     habitacion = get_object_or_404(Habitaciones, pk=id)
+    tipos = Tipos.objects.all()
 
     if request.method == "POST":
-        habitacion.numero = request.POST.get("numero")
-        habitacion.piso = request.POST.get("piso")
-        id_tipo = request.POST.get("id_tipo")
-        habitacion.ocupado = request.POST.get("ocupado", 0)
+        habitacion.numero = request.POST.get('numero')
+        habitacion.piso = request.POST.get('piso')
+        id_tipo = request.POST.get('id_tipo')
+        ocupado = request.POST.get('ocupado')
 
         try:
-            tipo = Tipos.objects.get(tipo=id_tipo)
-            habitacion.id_tipo = tipo
+            habitacion.id_tipo = Tipos.objects.get(pk=id_tipo)
+            habitacion.ocupado = True if ocupado == "1" else False
             habitacion.save()
             messages.success(request, "Habitación actualizada exitosamente.")
-        except Tipos.DoesNotExist:
-            messages.error(request, "El tipo de habitación no existe.")
+            return redirect("habitaciones")
         except IntegrityError:
             messages.error(request, "Error: El número de habitación ya existe.")
         except Exception as e:
             messages.error(request, f"Error al actualizar la habitación: {e}")
 
     return render(request, "trivago/editar_habitacion.html", {
-        "habitacion": habitacion
+        "habitacion": habitacion,
+        "tipos": tipos
     })
 
 
