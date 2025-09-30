@@ -37,12 +37,11 @@
 			<input type="text" name="piso" maxlength="2" pattern="[0-9]+" class="form-control"
 				value="{{ habitacion.piso }}" placeholder="Ej. 1" required>
 		</div>
-
 		<div class="mb-3">
 			<label class="form-label">Tipo</label>
 			<select name="id_tipo">
 				{% for tipo in tipos %}
-				<option value="{{ tipo.id_tipo }}" {% if habitacion.id_tipo.id_tipo==tipo.id_tipo %}selected{% endif %}>
+				<option value="{{ tipo.id_tipo }}" {% if habitacion.id_tipo_id == tipo.id_tipo %}selected{% endif %}>
 					{{ tipo.tipo }}
 				</option>
 				{% endfor %}
