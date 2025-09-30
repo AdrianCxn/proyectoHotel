@@ -10,54 +10,183 @@
 	<title>Editar | Habitaciones</title>
 </head>
 
+<style>
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+		display: flex;
+		min-height: 100vh;
+		padding: 50px 15px;
+		justify-content: center;
+		align-items: center;
+		background: rgb(10, 15, 60);
+		background: linear-gradient(135deg, rgb(36, 44, 112) 0%, rgb(10, 15, 60) 55%);
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	.main-container {
+		max-width: 700;
+		background-color: #fff;
+		display: flex;
+		border-radius: 10px;
+		overflow: hidden;
+	}
+
+	.container {
+		padding: 30px 40px;
+		width: 400px;
+		background-color: #fff;
+	}
+
+	.container h1 {
+		font-size: 30px;
+		letter-spacing: 0px;
+		font-weight: 700;
+		text-align: center;
+		color: rgb(10, 15, 60);
+		position: relative;
+		text-transform: uppercase;
+		margin-bottom: 30px;
+	}
+
+	input {
+		width: 100%;
+		padding: 8px;
+		margin-bottom: 15px;
+		border: 1px solid rgb(36, 44, 112);
+		border-radius: 5px;
+		box-sizing: border-box;
+		resize: vertical;
+		font-size: 15px;
+	}
+
+	label {
+		font-size: 15px;
+		display: block;
+		padding: 5px 0px;
+		margin-right: 10px;
+		margin-bottom: 5px;
+		font-weight: bold;
+		font-size: large;
+		color: rgb(21, 43, 84);
+	}
+
+	.select-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between; /* los separa uniformemente */
+    margin-bottom: 20px;
+}
+
+.select-actions .mb-3 {
+    flex: 1; /* que cada select ocupe la mitad del contenedor */
+}
+
+	select {
+		width: 100%;
+		padding: 8px;
+		border: 1px solid rgb(36, 44, 112);
+		border-radius: 5px;
+		background-color: #f1f1f1;
+		margin-bottom: 10px;
+		font-size: 15px;
+	}
+
+	.form-actions {
+		display: flex;
+		gap: 10px;
+		justify-content: center;
+		margin-top: 20px;
+	}
+
+	a,
+	.container button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		background: linear-gradient(135deg, rgb(36, 44, 112) 0%, rgb(10, 15, 60) 55%);
+		color: #fff;
+		border: none;
+		font-size: 20px;
+		font-weight: 600;
+		padding: 12px 20px;
+		border-radius: 12px;
+		cursor: pointer;
+		transition: all 0.5s;
+		text-decoration: none;
+	}
+
+
+	a:hover,
+	.container button:hover {
+		opacity: 0.8;
+	}
+
+	.image {
+		width: 300px;
+		height: auto;
+		flex-shrink: 0;
+	}
+
+	.image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+</style>
+
 <body>
 	<!-- Menu -->
 	<div class="preload">
 		<div class="preload-wave"></div>
 	</div>
 
-	{% include 'trivago/index.html' %}
+	<div class="main-container">
+		<div class="container">
+			<h1>Editar habitación {{ habitacion.numero }}</h1>
+			<form method="POST" class="mb-4">
+				{% csrf_token %}
+				<div class="mb-3">
+					<label class="form-label">Número de habitación</label>
+					<input type="text" name="numero" maxlength="4" pattern="[0-9]+" value="{{ habitacion.numero }}"
+						class="form-control" placeholder="Ej. 101" required>
+				</div>
 
-	<div class="image">
-		<img src="https://www.zeysey.com/storage/image/project/01HT8QFH9KK6RK1J3Q6GKPD5VM.jpg" alt="Titulo">
-		<h1 class="titulo2">Editar habitación {{ habitacion.numero }}</h1>
+				<div class="mb-3">
+					<label class="form-label">Piso</label>
+					<input type="text" name="piso" maxlength="2" pattern="[0-9]+" class="form-control"
+						value="{{ habitacion.piso }}" placeholder="Ej. 1" required>
+				</div>
+				<div class="select-actions">
+					<div class="mb-3">
+						<label class="form-label">Tipo</label>
+						<select name="id_tipo">
+							{% for tipo in tipos %}
+							<option value="{{ tipo.id_tipo }}" {% if habitacion.id_tipo_id == tipo.id_tipo %}selected{% endif %}>
+								{{ tipo.tipo }}
+							</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Estado</label>
+						<select name="ocupado">
+							<option value="0" {% if not habitacion.ocupado %}selected{% endif %}>Disponible</option>
+							<option value="1" {% if habitacion.ocupado %}selected{% endif %}>Ocupado</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-actions">
+					<a href="{% url 'habitaciones' %}" class="btn btn-secondary">Cancelar</a>
+					<button type="submit" class="btn btn-primary">Aplicar cambios</button>
+				</div>
+			</form>
+		</div>
+		<div class="image">
+			<img src="https://www.zeysey.com/storage/image/project/01HT8QFH9KK6RK1J3Q6GKPD5VM.jpg" alt="Titulo">
+		</div>
 	</div>
-
-	<!------------------------------------------------------------------------------------------------->
-	<form method="POST" class="mb-4">
-		{% csrf_token %}
-		<div class="mb-3">
-			<label class="form-label">Número de habitación</label>
-			<input type="text" name="numero" maxlength="4" pattern="[0-9]+" value="{{ habitacion.numero }}"
-				class="form-control" placeholder="Ej. 101" required>
-		</div>
-
-		<div class="mb-3">
-			<label class="form-label">Piso</label>
-			<input type="text" name="piso" maxlength="2" pattern="[0-9]+" class="form-control"
-				value="{{ habitacion.piso }}" placeholder="Ej. 1" required>
-		</div>
-		<div class="mb-3">
-			<label class="form-label">Tipo</label>
-			<select name="id_tipo">
-				{% for tipo in tipos %}
-				<option value="{{ tipo.id_tipo }}" {% if habitacion.id_tipo_id == tipo.id_tipo %}selected{% endif %}>
-					{{ tipo.tipo }}
-				</option>
-				{% endfor %}
-			</select>
-		</div>
-
-		<div class="mb-3">
-			<label class="form-label">Estado</label>
-			<select name="ocupado">
-				<option value="0" {% if not habitacion.ocupado %}selected{% endif %}>Disponible</option>
-				<option value="1" {% if habitacion.ocupado %}selected{% endif %}>Ocupado</option>
-			</select>
-		</div>
-
-		<a href="{% url 'habitaciones' %}" class="btn btn-secondary">Cancelar</a>
-		<button type="submit" class="btn btn-primary">Aplicar cambios</button>
-	</form>
-
 </html>

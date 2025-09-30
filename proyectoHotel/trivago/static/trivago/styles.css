@@ -11,12 +11,14 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 15px 0;
 }
 
 .opciones {
     display: flex;
     float: left;
-    
+    font-size: 18px;
+    margin-left: 10px;
 }
 
 .opciones2 {
