@@ -8,6 +8,75 @@
 from django.db import models
 
 
+class AuthGroup(models.Model):
+    name = models.CharField(unique=True, max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group'
+
+
+class AuthGroupPermissions(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group_permissions'
+        unique_together = (('group', 'permission'),)
+
+
+class AuthPermission(models.Model):
+    name = models.CharField(max_length=255)
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    codename = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_permission'
+        unique_together = (('content_type', 'codename'),)
+
+
+class AuthUser(models.Model):
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.IntegerField()
+    username = models.CharField(unique=True, max_length=150)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    email = models.CharField(max_length=254)
+    is_staff = models.IntegerField()
+    is_active = models.IntegerField()
+    date_joined = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user'
+
+
+class AuthUserGroups(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_groups'
+        unique_together = (('user', 'group'),)
+
+
+class AuthUserUserPermissions(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_user_permissions'
+        unique_together = (('user', 'permission'),)
+
+
 class Consumos(models.Model):
     id_consumo = models.AutoField(db_column='ID_CONSUMO', primary_key=True)  # Field name made lowercase.
     id_reserva = models.ForeignKey('Reservas', models.DO_NOTHING, db_column='ID_RESERVA')  # Field name made lowercase.
@@ -52,6 +121,51 @@ class Distribuidores(models.Model):
         db_table = 'distribuidores'
 
 
+class DjangoAdminLog(models.Model):
+    action_time = models.DateTimeField()
+    object_id = models.TextField(blank=True, null=True)
+    object_repr = models.CharField(max_length=200)
+    action_flag = models.PositiveSmallIntegerField()
+    change_message = models.TextField()
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'django_admin_log'
+
+
+class DjangoContentType(models.Model):
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'django_content_type'
+        unique_together = (('app_label', 'model'),)
+
+
+class DjangoMigrations(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_migrations'
+
+
+class DjangoSession(models.Model):
+    session_key = models.CharField(primary_key=True, max_length=40)
+    session_data = models.TextField()
+    expire_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_session'
+
+
 class Habitaciones(models.Model):
     id_habitacion = models.AutoField(db_column='ID_HABITACION', primary_key=True)  # Field name made lowercase.
     numero = models.IntegerField(db_column='NUMERO', unique=True)  # Field name made lowercase.
@@ -72,7 +186,7 @@ class Huespedes(models.Model):
     telefono = models.CharField(db_column='TELEFONO', unique=True, max_length=50)  # Field name made lowercase.
     email = models.CharField(db_column='EMAIL', unique=True, max_length=50)  # Field name made lowercase.
     edad = models.IntegerField(db_column='EDAD')  # Field name made lowercase.
-    id_reserva = models.ForeignKey('Reservas', models.DO_NOTHING, db_column='ID_RESERVA')  # Field name made lowercase.
+    id_reserva = models.ForeignKey('Reservas', models.DO_NOTHING, db_column='ID_RESERVA', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -88,6 +202,18 @@ class Inventarios(models.Model):
     class Meta:
         managed = False
         db_table = 'inventarios'
+
+
+class PortalhuespedHuespedcuenta(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    creado = models.DateTimeField()
+    actualizado = models.DateTimeField()
+    huesped = models.OneToOneField(Huespedes, models.DO_NOTHING)
+    user = models.OneToOneField(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'portalhuesped_huespedcuenta'
 
 
 class Productos(models.Model):
@@ -118,6 +244,7 @@ class Reservas(models.Model):
     id_habitacion = models.ForeignKey(Habitaciones, models.DO_NOTHING, db_column='ID_HABITACION')  # Field name made lowercase.
     fecha_llegada = models.DateTimeField(db_column='FECHA_LLEGADA')  # Field name made lowercase.
     fecha_salida = models.DateTimeField(db_column='FECHA_SALIDA')  # Field name made lowercase.
+    capacidad_total = models.IntegerField(db_column='CAPACIDAD_TOTAL')  # Field name made lowercase.
     cantidad_a = models.IntegerField(db_column='CANTIDAD_A')  # Field name made lowercase.
     cantidad_n = models.IntegerField(db_column='CANTIDAD_N')  # Field name made lowercase.
     metodo_pago = models.CharField(db_column='METODO_PAGO', max_length=8, blank=True, null=True)  # Field name made lowercase.
@@ -161,6 +288,7 @@ class Tipos(models.Model):
     tipo = models.CharField(db_column='TIPO', max_length=8, blank=True, null=True)  # Field name made lowercase.
     cama = models.IntegerField(db_column='CAMA')  # Field name made lowercase.
     baños = models.IntegerField(db_column='BAÑOS')  # Field name made lowercase.
+    capacidad_total = models.IntegerField(db_column='CAPACIDAD_TOTAL')  # Field name made lowercase.
     capacidad_a = models.IntegerField(db_column='CAPACIDAD_A')  # Field name made lowercase.
     capacidad_n = models.IntegerField(db_column='CAPACIDAD_N')  # Field name made lowercase.
     cocineta = models.IntegerField(db_column='COCINETA')  # Field name made lowercase.

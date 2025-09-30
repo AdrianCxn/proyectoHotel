@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'trivago',
+    'portalHuesped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,7 +80,6 @@ DATABASES = {
         'NAME': 'hotel_final',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'admin',
         'PORT': '3306'
     }
 }

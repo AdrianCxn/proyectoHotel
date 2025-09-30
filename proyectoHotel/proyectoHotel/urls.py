@@ -19,5 +19,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('', include('trivago.urls')),
+    path('huesped/', include('portalHuesped.urls')),
     path('admin/', admin.site.urls),
 ]

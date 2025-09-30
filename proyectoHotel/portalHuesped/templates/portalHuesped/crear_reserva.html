@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Reserva</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+  <h1 class="mb-3">Crear Reserva</h1>
+  <a href="{% url 'huesped_dashboard' %}" class="btn btn-link mb-3">&larr; Volver</a>
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Fecha llegada</label>
+        <input type="datetime-local" name="fecha_llegada" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Fecha salida</label>
+        <input type="datetime-local" name="fecha_salida" class="form-control" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Adultos</label>
+        <input type="number" name="adultos" min="1" value="1" class="form-control" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Niños</label>
+        <input type="number" name="ninos" min="0" value="0" class="form-control" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Tipo de habitación</label>
+        <select name="id_tipo" class="form-select" required>
+          <option value="">-- Selecciona --</option>
+          {% for t in tipos %}
+            <option value="{{ t.id_tipo }}">{{ t.tipo }} | Vista: {{ t.vista }} | ${{ t.precio }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Método de pago</label>
+        <select name="metodo_pago" class="form-select" required>
+          <option value="Credito">Crédito</option>
+          <option value="Debito">Débito</option>
+          <option value="Efectivo">Efectivo</option>
+        </select>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Descuento (opcional)</label>
+        <select name="id_descuento" class="form-select" id="descuento-select">
+          <option value="">-- Ninguno --</option>
+          {% for d in descuentos %}
+            <option value="{{ d.id_descuento }}" data-inicio="{{ d.fecha_inicio }}" data-fin="{{ d.fecha_fin }}">#{{ d.id_descuento }} ({{ d.fecha_inicio }} a {{ d.fecha_fin }}) {{ d.descuento }}%</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Crear</button>
+  </form>
+  <script>
+    function filtrarDescuentos() {
+      const llegada = document.querySelector('input[name="fecha_llegada"]').value;
+      const salida = document.querySelector('input[name="fecha_salida"]').value;
+      const select = document.getElementById('descuento-select');
+      const opciones = select.querySelectorAll('option[data-inicio]');
+      if (!llegada || !salida) {
+        opciones.forEach(opt => opt.style.display = '');
+        return;
+      }
+      const fechaLlegada = new Date(llegada);
+      const fechaSalida = new Date(salida);
+      opciones.forEach(opt => {
+        const inicio = new Date(opt.getAttribute('data-inicio'));
+        const fin = new Date(opt.getAttribute('data-fin'));
+        if (inicio <= fechaLlegada && fin >= fechaSalida) {
+          opt.style.display = '';
+        } else {
+          opt.style.display = 'none';
+          if (opt.selected) select.value = '';
+        }
+      });
+    }
+    document.querySelector('input[name="fecha_llegada"]').addEventListener('change', filtrarDescuentos);
+    document.querySelector('input[name="fecha_salida"]').addEventListener('change', filtrarDescuentos);
+  </script>
+</body>
+</html>

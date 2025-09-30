@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Hola, {{ request.user. }}</h1>
+    <div>
+      <a href="{% url 'crear_reserva' %}" class="btn btn-success me-2">Crear Reserva</a>
+      <a href="{% url 'logout_huesped' %}" class="btn btn-outline-danger">Cerrar Sesión</a>
+    </div>
+  </div>
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+  <h4>Mis Reservas</h4>
+  {% if reservas %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Habitación</th>
+          <th>Llegada</th>
+          <th>Salida</th>
+          <th>Adultos</th>
+          <th>Niños</th>
+          <th>Estado</th>
+          <th>Reporte</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reservas %}
+        <tr>
+          <td>{{ r.id_reserva }}</td>
+          <td>{{ r.id_habitacion.numero }}</td>
+          <td>{{ r.fecha_llegada }}</td>
+          <td>{{ r.fecha_salida }}</td>
+          <td>{{ r.cantidad_a }}</td>
+          <td>{{ r.cantidad_n }}</td>
+          <td>{% if r.activa %}Activa{% else %}Cerrada{% endif %}</td>
+          <td><a class="btn btn-sm btn-primary" href="{% url 'reporte_reserva' r.id_reserva %}">Ver</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">Aún no tienes reservas. Crea una nueva para comenzar tu estancia.</div>
+  {% endif %}
+</body>
+</html>
