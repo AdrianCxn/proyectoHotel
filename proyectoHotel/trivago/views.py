@@ -65,7 +65,7 @@ def editar_habitacion(request, id):
             habitacion.ocupado = True if ocupado == "1" else False
             habitacion.save()
             messages.success(request, "Habitación actualizada exitosamente.")
-
+            return redirect('habitaciones')
         except IntegrityError:
             messages.error(request, "Error: El número de habitación ya existe.")
         except Exception as e:
