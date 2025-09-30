@@ -23,12 +23,12 @@ def registro(request):
         email = request.POST.get('email')
         nombre = request.POST.get('nombre')
         pr_apellido = request.POST.get('pr_apellido')
-        se_apellido = request.POST.get('se_apellido')
+        se_apellido = request.POST.get('se_apellido') or None
         telefono = request.POST.get('telefono')
         edad = request.POST.get('edad')
 
-        if not all([username, password, email, nombre, pr_apellido, se_apellido, telefono, edad]):
-            messages.error(request, 'Todos los campos son obligatorios.')
+        if not all([username, password, email, nombre, pr_apellido, telefono, edad]):
+            messages.error(request, 'Todos los campos obligatorios deben llenarse.')
             return redirect('registro_huesped')
 
         if User.objects.filter(username=username).exists():
@@ -37,8 +37,11 @@ def registro(request):
         if Huespedes.objects.filter(email=email).exists():
             messages.error(request, 'Ya existe un huésped con ese email.')
             return redirect('registro_huesped')
+        if Huespedes.objects.filter(telefono=telefono).exists():
+            messages.error(request, 'Ese telefono ya esta registrado.')
+            return redirect('registro_huesped')
 
-        user = User.objects.create_user(username=username, password=password, email=email)
+        
         huesped = Huespedes.objects.create(
             nombre=nombre,
             pr_apellido=pr_apellido,
@@ -46,8 +49,11 @@ def registro(request):
             telefono=telefono,
             email=email,
             edad=edad,
-            id_reserva=None
+            id_reserva = None
         )
+
+
+
         # Eto e' para crear el usuario con nombre y apellido porque no se guarda automaticamente
         user = User.objects.create_user(
             username=username,
@@ -57,11 +63,10 @@ def registro(request):
             last_name=pr_apellido      # Primer apellido
         )
         HuespedCuenta.objects.create(user=user, huesped=huesped)
-        messages.success(request, 'Cuenta creada. Ahora puedes iniciar sesión.')
+        messages.success(request, 'Cuenta creada correctamente. Ahora puedes iniciar sesión.')
         return redirect('login_huesped')
 
     return render(request, 'portalHuesped/registro.html')
-
 
 def login_huesped(request):
     if request.user.is_authenticated:
