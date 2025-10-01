@@ -124,15 +124,88 @@ def staff(request):
 
 
 def agregar_staff(request):
-    return render(request, "trivago/staff/gregar_staff.html")
+    if request.method == "POST":
+        # Campos obligatorios básicos
+        nombre = request.POST.get("nombre") or ""
+        pr_apellido = request.POST.get("pr_apellido") or ""
+        telefono = request.POST.get("telefono") or ""
+        email = request.POST.get("email") or ""
+        edad = request.POST.get("edad") or ""
+        salario = request.POST.get("salario") or ""
+
+        # Campos opcionales: si vienen vacíos -> None
+        se_apellido = (request.POST.get("se_apellido") or None) or None
+        area_trabajo = (request.POST.get("area_trabajo") or None) or None
+        turno = (request.POST.get("turno") or None) or None
+
+        if not (nombre and pr_apellido and telefono and email and edad and salario):
+            messages.error(request, "Faltan campos obligatorios.")
+            return render(request, "trivago/staff/agregar_staff.html")
+
+        try:
+            nuevo_staff = Staffs(
+                nombre=nombre,
+                pr_apellido=pr_apellido,
+                se_apellido=se_apellido,
+                telefono=telefono,
+                email=email,
+                edad=edad,
+                area_trabajo=area_trabajo,
+                salario=salario,
+                turno=turno
+            )
+            nuevo_staff.save()
+            messages.success(request, "Staff agregado exitosamente.")
+            return redirect('staff')
+        except IntegrityError:
+            messages.error(request, "Teléfono o email ya registrados.")
+        except Exception as e:
+            messages.error(request, f"Error al agregar el staff: {e}")
+
+    return render(request, "trivago/staff/agregar_staff.html")
 
 
 def editar_staff(request, id):
-    return render(request, "trivago/staff/editar_staff.html")
+    staff = get_object_or_404(Staffs, pk=id)
+
+    if request.method == "POST":
+        staff.nombre = request.POST.get("nombre")
+        staff.pr_apellido = request.POST.get("pr_apellido")
+        staff.se_apellido = request.POST.get("se_apellido")
+        staff.telefono = request.POST.get("telefono")
+        staff.email = request.POST.get("email")
+        staff.edad = request.POST.get("edad")
+        staff.area_trabajo = request.POST.get("area_trabajo")
+        staff.salario = request.POST.get("salario")
+        staff.turno = request.POST.get("turno")
+
+        try:
+            staff.save()
+            messages.success(request, "Staff actualizado exitosamente.")
+            return redirect('staff')
+        except IntegrityError:
+            messages.error(request, "Error: Ya existe un staff con estos datos.")
+        except Exception as e:
+            messages.error(request, f"Error al actualizar el staff: {e}")
+
+    return render(request, "trivago/staff/editar_staff.html", {
+        "staff": staff
+    })
 
 
 def eliminar_staff(request, id):
-    pass
+    staff = get_object_or_404(Staffs, pk=id)
+
+    if request.method == "POST":
+        try:
+            staff.delete()
+            messages.success(request, "Staff eliminado exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar el staff: {e}")
+        return redirect("staff")
+    else:
+        return redirect("staff")
+
 
 def descuentos(request):
     descuentos = Descuentos.objects.all()

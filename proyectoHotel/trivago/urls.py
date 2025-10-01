@@ -16,7 +16,6 @@ urlpatterns = [
     # Paths para administracion
     path('staff/', views.staff, name='staff'),
 
-
     path('descuentos/', views.descuentos, name='descuentos'),
     path('agregar_descuento/', views.agregar_descuento, name='agregar_descuento'),
     path('editar_descuento/<int:id>/', views.editar_descuento, name='editar_descuento'),
