@@ -186,7 +186,6 @@ class Huespedes(models.Model):
     telefono = models.CharField(db_column='TELEFONO', unique=True, max_length=50)  # Field name made lowercase.
     email = models.CharField(db_column='EMAIL', unique=True, max_length=50)  # Field name made lowercase.
     edad = models.IntegerField(db_column='EDAD')  # Field name made lowercase.
-    id_reserva = models.ForeignKey('Reservas', models.DO_NOTHING, db_column='ID_RESERVA', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -238,15 +237,6 @@ class Rerestaurantes(models.Model):
         managed = False
         db_table = 'rerestaurantes'
 
-class Descuentos(models.Model):
-    id_descuento = models.AutoField(db_column='ID_DESCUENTO', primary_key=True)
-    fecha_inicio = models.DateField(db_column='FECHA_INICIO')
-    fecha_fin = models.DateField(db_column='FECHA_FIN')
-    descuento = models.DecimalField(db_column='DESCUENTO', max_digits=8, decimal_places=2)
-
-    class Meta:
-        managed = False
-        db_table = 'descuentos'
 
 class Reservas(models.Model):
     id_reserva = models.AutoField(db_column='ID_RESERVA', primary_key=True)  # Field name made lowercase.
@@ -258,7 +248,8 @@ class Reservas(models.Model):
     cantidad_n = models.IntegerField(db_column='CANTIDAD_N')  # Field name made lowercase.
     metodo_pago = models.CharField(db_column='METODO_PAGO', max_length=8, blank=True, null=True)  # Field name made lowercase.
     activa = models.IntegerField(db_column='ACTIVA')  # Field name made lowercase.
-    id_descuento = models.ForeignKey(Descuentos, models.DO_NOTHING, db_column='ID_DESCUENTO')  # Field name made lowercase.
+    id_descuento = models.ForeignKey(Descuentos, models.DO_NOTHING, db_column='ID_DESCUENTO', blank=True, null=True)  # Field name made lowercase.
+    id_huesped = models.ForeignKey(Huespedes, models.DO_NOTHING, db_column='ID_HUESPED')  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -303,11 +294,8 @@ class Tipos(models.Model):
     cocineta = models.IntegerField(db_column='COCINETA')  # Field name made lowercase.
     televisor = models.IntegerField(db_column='TELEVISOR')  # Field name made lowercase.
     vista = models.CharField(db_column='VISTA', max_length=7, blank=True, null=True)  # Field name made lowercase.
-    precio = models.DecimalField(db_column='PRECIO', max_digits=8, decimal_places=2)
-    
+    precio = models.DecimalField(db_column='PRECIO', max_digits=8, decimal_places=2)  # Field name made lowercase.
+
     class Meta:
         managed = False
-        db_table = 'tipos'  # Field name made lowercase.
-
-
-
+        db_table = 'tipos'

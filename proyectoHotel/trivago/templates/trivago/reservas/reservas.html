@@ -1,0 +1,98 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="{% static 'trivago/rest_style.css' %}">
+    <title>Registro Reservas</title>
+</head>
+
+<body>
+    <!-- Menu -->
+	<div class="preload">
+		<div class="preload-wave"></div>
+	</div>
+
+    {% include 'trivago/index.html' %} 
+
+    <div class="image">
+		<img src="https://remindshospitality.com/wp-content/uploads/2021/10/shutterstock_1566785659-1.jpg" alt="Titulo">
+		<h1 class="titulo2">Reservas</h1>
+	</div>
+
+    <div class="container-xl">
+		<div class="table-responsive">
+			<div class="table-wrapper">
+				<div class="table-title">
+					<div class="row">
+						<div class="col-sm-6">
+							<h2><b>Reservas</b></h2>
+						</div>
+					</div>
+				</div>
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>ID</th>
+                            <th>Huésped</th>
+                            <th>Habitación</th>
+                            <th>Llegada</th>
+                            <th>Salida</th>
+                            <th>Total de huéspedes</th>
+                            <th>Adultos</th>
+                            <th>Niños</th>
+                            <th>Método de pago</th>
+                            <th>Estado</th>
+                            {% if id_descuento %}
+                                <th>Descuento</th>
+                            {% endif %}
+						</tr>
+					</thead>
+					<tbody>
+						{% for reserva in reservas %}
+                        <tr>
+                            <td>{{ reserva.id_reserva }}</td>
+                            <td>{{ reserva.id_huesped.nombre }} {{ reserva.id_huesped.pr_apellido }} {{ reserva.id_huesped.se_apellido }}</td>
+                            <td>{{ reserva.id_habitacion.numero }}</td>
+                            <td>{{ reserva.fecha_llegada }}</td>
+                            <td>{{ reserva.fecha_salida }}</td>
+                            <td>{{ reserva.capacidad_total }}</td>
+                            <td>{{ reserva.cantidad_a }}</td>
+                            <td>{{ reserva.cantidad_n }}</td>
+                            <td>{{ reserva.metodo_pago }}</td>
+                            <td>{% if reserva.activa %}Activa{% else %}Cerrada{% endif %}</td>
+                            {% if id_descuento %}
+                                <td>{{ reserva.id_descuento.porcentaje }}%</td>
+                            {% endif %}
+                            <td>
+                                <!-- Botón Editar -->
+                                <a class="btn text-warning"
+                                    href="{% url 'editar_reserva' reserva.id_reserva %}" title="Editar">
+                                    <i class="material-icons">&#xE254;</i>
+                                </a>
+
+                                <!-- Botón Eliminar -->
+                                <form method="POST" action="{% url 'eliminar_reserva' reserva.id_reserva %}"
+                                    style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn text-danger"
+                                        onclick="return confirm('¿Seguro que deseas eliminar esta reserva?');"
+                                        data-toggle="tooltip" title="Eliminar">
+                                        <i class="material-icons">&#xE872;</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

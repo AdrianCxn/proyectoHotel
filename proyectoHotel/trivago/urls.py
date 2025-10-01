@@ -48,7 +48,11 @@ urlpatterns = [
     path('huespedes/', views.huespedes, name='huespedes'),
     path('eliminar_huesped/<int:id>/', views.eliminar_huesped, name='eliminar_huesped'),
 
+    # Paths para reservas
     path('reservas/', views.reservas, name='reservas'),
+    path('editar_reserva/<int:id>/', views.editar_reserva, name='editar_reserva'),
+    path('eliminar_reserva/<int:id>/', views.eliminar_reserva, name='eliminar_reserva'),
+
     path('consumos/', views.consumos, name='consumos'),
 
     # Path para restaurante

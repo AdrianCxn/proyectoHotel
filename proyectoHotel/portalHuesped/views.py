@@ -95,7 +95,7 @@ def logout_huesped(request):
 @login_required
 def huesped_dashboard(request):
     cuenta = request.user.huesped_cuenta
-    reservas = Reservas.objects.filter(huespedes__id_huesped=cuenta.huesped.id_huesped).distinct()
+    reservas = Reservas.objects.filter(id_huesped=cuenta.huesped.id_huesped).distinct()
     sin_reserva = not reservas.exists()
     return render(request, 'portalHuesped/dashboard.html', {
         'cuenta': cuenta,
@@ -107,7 +107,7 @@ def huesped_dashboard(request):
 @login_required
 def reporte_reserva(request, id_reserva: int):
     cuenta = request.user.huesped_cuenta
-    reserva = get_object_or_404(Reservas, pk=id_reserva, huespedes__id_huesped=cuenta.huesped.id_huesped)
+    reserva = get_object_or_404(Reservas, pk=id_reserva, id_huesped=cuenta.huesped.id_huesped)
     # Datos financieros y consumos
     cuenta_reserva = Cuentas.objects.filter(id_reserva=reserva).first()
     consumos = Consumos.objects.filter(id_reserva=reserva).select_related('id_producto')
@@ -210,6 +210,7 @@ def crear_reserva(request):
 
         try:
             reserva = Reservas.objects.create(
+                id_huesped=cuenta.huesped,
                 id_habitacion=habitacion,
                 fecha_llegada=fl,
                 fecha_salida=fs,
@@ -220,9 +221,6 @@ def crear_reserva(request):
                 activa=1,
                 id_descuento=descuento_obj if descuento_obj else None
             )
-            if cuenta.huesped.id_reserva_id is None:
-                cuenta.huesped.id_reserva = reserva
-                cuenta.huesped.save()
             messages.success(request, f'Reserva creada (# {reserva.id_reserva}).')
             return redirect('huesped_dashboard')
         except Exception as e:

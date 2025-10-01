@@ -18,6 +18,7 @@ def tipohabitacion(request):
         "tipos": tipos
     })
 
+
 def editar_tipohabitacion(request, id):
     tipo = get_object_or_404(Tipos, pk=id)
     
@@ -35,12 +36,14 @@ def editar_tipohabitacion(request, id):
         "tipo": tipo
     })
 
+
 # Vistas para habitaciones
 def habitaciones(request):
     habitaciones = Habitaciones.objects.all()
     return render(request, "trivago/habitaciones/habitaciones.html", {
         "habitaciones": habitaciones
     })
+
 
 def agregar_habitacion(request):
     tipos = Tipos.objects.all()
@@ -71,6 +74,7 @@ def agregar_habitacion(request):
 
     return render(request, "trivago/habitaciones/agregar_habitacion.html", {'tipos': tipos})
 
+
 def editar_habitacion(request, id):
     habitacion = get_object_or_404(Habitaciones, pk=id)
     tipos = Tipos.objects.all()
@@ -97,6 +101,7 @@ def editar_habitacion(request, id):
         "tipos": tipos
     })
 
+
 def eliminar_habitacion(request, id):
     habitacion = get_object_or_404(Habitaciones, pk=id)
 
@@ -117,6 +122,7 @@ def staff(request):
     return render(request, "trivago/staff/staff.html", {
         "staff": staff
     })
+
 
 def agregar_staff(request):
     if request.method == "POST":
@@ -159,6 +165,7 @@ def agregar_staff(request):
 
     return render(request, "trivago/staff/agregar_staff.html")
 
+
 def editar_staff(request, id):
     staff = get_object_or_404(Staffs, pk=id)
 
@@ -186,6 +193,7 @@ def editar_staff(request, id):
         "staff": staff
     })
 
+
 def eliminar_staff(request, id):
     staff = get_object_or_404(Staffs, pk=id)
 
@@ -199,12 +207,14 @@ def eliminar_staff(request, id):
     else:
         return redirect("staff")
 
+
 # Vistas para descuentos
 def descuentos(request):
     descuentos = Descuentos.objects.all()
     return render(request, "trivago/descuentos/descuentos.html", {
         "descuentos": descuentos
     })
+
 
 def agregar_descuento(request):
     descuentos = Descuentos.objects.all()
@@ -229,6 +239,7 @@ def agregar_descuento(request):
 
     return render(request, "trivago/descuentos/agregar_descuento.html")
 
+
 def editar_descuento(request, id):
     descuento = get_object_or_404(Descuentos, pk=id)
 
@@ -250,6 +261,7 @@ def editar_descuento(request, id):
         "descuento": descuento
     })
 
+
 def eliminar_descuento(request, id):
     descuentos = get_object_or_404(Descuentos, pk=id)
 
@@ -264,13 +276,13 @@ def eliminar_descuento(request, id):
         return redirect("descuentos")
     
 
-
 # Vistas para huespedes
 def huespedes(request):
     huespedes = Huespedes.objects.all()
     return render(request, "trivago/huespedes/huespedes.html", {
         "huespedes": huespedes
     })
+
 
 def eliminar_huesped(request, id):
     huespedes = get_object_or_404(Huespedes, pk=id)
@@ -286,13 +298,60 @@ def eliminar_huesped(request, id):
         return redirect("huespedes")
 
 
+# Vistas para reservas
 def reservas(request):
     reservas = Reservas.objects.all()
-    return render(request, "trivago/reservas.html", {
+    return render(request, "trivago/reservas/reservas.html", {
         "reservas": reservas
     })
 
 
+def editar_reserva(request, id):
+    reserva = get_object_or_404(Reservas, pk=id)
+    huespedes = Huespedes.objects.all()
+    
+    if request.method == 'POST':
+        id_habitacion = request.POST.get('habitacion')
+        reserva.id_habitacion = Habitaciones.objects.get(pk=id_habitacion)
+        id_huesped = request.POST.get('huesped')
+        reserva.id_huesped = Huespedes.objects.get(pk=id_huesped)
+        reserva.llegada = request.POST.get('llegada')
+        reserva.salida = request.POST.get('salida')
+        reserva.cantidad_adultos = request.POST.get('cantidad_adultos')
+        reserva.cantidad_ninos = request.POST.get('cantidad_ninos')
+        reserva.capacidad_total = int(reserva.cantidad_adultos) + int(reserva.cantidad_ninos)
+        reserva.metodo_pago = request.POST.get('metodo_pago')
+        reserva.activa = request.POST.get('estado')
+
+        try:
+            reserva.save()
+            messages.success(request, "Reserva actualizada exitosamente.")
+            return redirect('reservas')
+        except IntegrityError:
+            messages.error(request, "Error: Ya existe una reserva con estos datos.")
+        except Exception as e:
+            messages.error(request, f"Error al actualizar la reserva: {e}")
+
+    return render(request, "trivago/reservas/editar_reserva.html", {
+        "reserva": reserva,
+        "huespedes": huespedes
+    })
+
+
+def eliminar_reserva(request, id):
+    reserva = get_object_or_404(Reservas, pk=id)
+
+    if request.method == "POST":
+        try:
+            reserva.delete()
+            messages.success(request, "Reserva eliminada exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar la reserva: {e}")
+        return redirect("reservas")
+    else:
+        return redirect("reservas")
+
+# Vista para consumos
 def consumos(request):
     return render(request, "trivago/consumos.html")
 
@@ -308,6 +367,7 @@ def productos(request):
     return render(request, "trivago/productos/productos.html", {
         "productos": productos
     })
+
 
 def agregar_producto(request):
     productos = Productos.objects.all()
@@ -332,6 +392,7 @@ def agregar_producto(request):
 
     return render(request, "trivago/productos/agregar_producto.html")
 
+
 def editar_producto(request, id):
     producto = get_object_or_404(Productos, pk=id)
 
@@ -353,6 +414,7 @@ def editar_producto(request, id):
         "producto": producto
     })
 
+
 def eliminar_producto(request, id):
     productos = get_object_or_404(Productos, pk=id)
 
@@ -373,6 +435,7 @@ def distribuidores(request):
     return render(request, "trivago/distribuidores/distribuidores.html", {
         "distribuidores": distribuidores
     })
+
 
 def agregar_distribuidor(request):
     distribuidores = Distribuidores.objects.all()
@@ -396,6 +459,7 @@ def agregar_distribuidor(request):
 
     return render(request, "trivago/distribuidores/agregar_distribuidor.html")
 
+
 def editar_distribuidor(request, id):
     distribuidor = get_object_or_404(Distribuidores, pk=id)
 
@@ -415,6 +479,7 @@ def editar_distribuidor(request, id):
     return render(request, "trivago/distribuidores/editar_distribuidor.html", {
         "distribuidor": distribuidor
     })  
+
 
 def eliminar_distribuidor(request, id):
     distribuidores = get_object_or_404(Distribuidores, pk=id)
@@ -436,6 +501,7 @@ def inventario(request):
     return render(request, "trivago/inventarios/inventario.html", {
         "inventarios": inventarios
     })
+
 
 def agregar_inventario(request):
     productos_usados = Inventarios.objects.values_list("id_producto", flat=True)
@@ -472,6 +538,7 @@ def agregar_inventario(request):
         "productos": productos
     })
    
+
 def editar_inventario(request, id):
     inventario = get_object_or_404(Inventarios, pk=id)
     distribuidores = Distribuidores.objects.all()
@@ -490,6 +557,7 @@ def editar_inventario(request, id):
         "productos": productos,
         "distribuidores": distribuidores,
     })
+
 
 def eliminar_inventario(request, id):
     inventario = get_object_or_404(Inventarios, pk=id)
