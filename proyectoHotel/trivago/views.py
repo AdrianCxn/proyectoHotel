@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-from .models import Habitaciones, Huespedes, Reservas, Tipos
+from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos
 
 # Create your views here.
 # Vista para index
@@ -10,15 +10,39 @@ def index(request):
     tipos = Tipos.objects.all()
     return render(request, "trivago/index.html")
 
+
 # Vistas para habitaciones
 def tipohabitacion(request):
-    return render(request, "trivago/tipohabitacion.html")
+    tipos = Tipos.objects.all()
+    return render(request, "trivago/tipohabitacion/tipohabitacion.html", {
+        "tipos": tipos
+    })
+
+
+def editar_tipohabitacion(request, id):
+    tipo = get_object_or_404(Tipos, pk=id)
+    
+    if request.method == "POST":
+        precio = request.POST.get("precio")
+
+        try:
+            tipo.precio = precio
+            tipo.save()
+            messages.success(request, "Tipo de habitación actualizado exitosamente.")
+            return redirect('tipohabitacion')
+        except Exception as e:
+            messages.error(request, f"Error al actualizar el tipo de habitación: {e}")
+    return render(request, "trivago/tipohabitacion/editar_tipo_habitacion.html", {
+        "tipo": tipo
+    })
+
 
 def habitaciones(request):
     habitaciones = Habitaciones.objects.all()
-    return render(request, "trivago/habitaciones.html", {
+    return render(request, "trivago/habitaciones/habitaciones.html", {
         "habitaciones": habitaciones
     })
+
 
 def agregar_habitacion(request):
     tipos = Tipos.objects.all()
@@ -47,7 +71,7 @@ def agregar_habitacion(request):
         except Exception as e:
             messages.error(request, f"Error al agregar la habitación: {e}")
 
-    return render(request, "trivago/agregar_habitacion.html", {'tipos': tipos})
+    return render(request, "trivago/habitaciones/agregar_habitacion.html", {'tipos': tipos})
 
 
 def editar_habitacion(request, id):
@@ -71,7 +95,7 @@ def editar_habitacion(request, id):
         except Exception as e:
             messages.error(request, f"Error al actualizar la habitación: {e}")
 
-    return render(request, "trivago/editar_habitacion.html", {
+    return render(request, "trivago/habitaciones/editar_habitacion.html", {
         "habitacion": habitacion,
         "tipos": tipos
     })
@@ -93,8 +117,22 @@ def eliminar_habitacion(request, id):
 
 # Vistas para administracion
 def staff(request):
-    return render(request, "trivago/staff.html")
+    staff = Staffs.objects.all()
+    return render(request, "trivago/staff/staff.html", {
+        "staff": staff
+    })
 
+
+def agregar_staff(request):
+    return render(request, "trivago/staff/gregar_staff.html")
+
+
+def editar_staff(request, id):
+    return render(request, "trivago/staff/editar_staff.html")
+
+
+def eliminar_staff(request, id):
+    pass
 
 def descuentos(request):
     return render(request, "trivago/descuentos.html")

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% include 'trivago/index.html' %}
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido paterno</th>
+            <th>Apellido materno</th>
+            <th>Telefono</th>
+            <th>Email</th>
+            <th>Edad</th>
+            <th>Area de trabajo</th>
+            <th>Salario</th>
+            <th>Turno</th>
+        </thead>
+        <tbody>
+            {% for empleado in staff %}
+            <tr>
+                <td>{{ empleado.id_staff }}</td>
+                <td>{{ empleado.nombre }}</td>
+                <td>{{ empleado.pr_apellido }}</td>
+                <td>{{ empleado.se_apellido }}</td>
+                <td>{{ empleado.telefono }}</td>
+                <td>{{ empleado.email }}</td>
+                <td>{{ empleado.edad }}</td>
+                <td>{{ empleado.area_trabajo }}</td>
+                <td>{{ empleado.salario }}</td>
+                <td>{{ empleado.turno }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

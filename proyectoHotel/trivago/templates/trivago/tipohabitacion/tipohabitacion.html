@@ -49,35 +49,34 @@
 							<th>Tipo</th>
 							<th>Camas</th>
 							<th>Baños</th>
+							<th>Max Capacidad</th>
 							<th>Max Adultos</th>
 							<th>Max Niños</th>
 							<th>Cocineta</th>
                             <th>Televisor</th>
                             <th>Vista</th>
                             <th>Precio</th>
-							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						
-                        
-						{% for reserva in reservas %}
+						{% for tipo in tipos %}
 						<tr>
-							<td>{{ reserva.tipo }}</td>
-							<td>{{ reserva.camas }}</td>
-							<td>{{ reserva.baños }}</td>
-							<td>{{ reserva.max_adultos }}</td>
-							<td>{{ reserva.max_ninios }}</td>
-							<td>{{ reserva.cocineta}}</td>
-							<td>{{ reserva.televisor}}</td>
-							<td>{{ reserva.vista}}</td>
-							<td>{{ reserva.precio}}</td>
-							
+							<td>{{ tipo.tipo }}</td>
+							<td>{{ tipo.cama }}</td>
+							<td>{{ tipo.baños }}</td>
+							<td>{{ tipo.capacidad_total }}</td>
+							<td>{{ tipo.capacidad_a }}</td>
+							<td>{{ tipo.capacidad_n }}</td>
+							<td>{{ tipo.cocineta }}</td>
+							<td>{{ tipo.televisor }}</td>
+							<td>{{ tipo.vista }}</td>
+							<td>{{ tipo.precio }}</td>
 							<td>
-								<a href="#Editar" class="edit" data-toggle="modal"><i class="material-icons"
-										data-toggle="tooltip" title="Editar">&#xE254;</i></a>
-								<a href="#Eliminar" class="delete" data-toggle="modal"><i
-										class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i></a>
+								<!-- Botón Editar -->
+								<a class="btn text-warning"
+									href="{% url 'editar_tipo_habitacion' tipo.id_tipo %}" title="Editar">
+									<i class="material-icons">&#xE254;</i>
+								</a>
 							</td>
 						</tr>
 						{% endfor %}
