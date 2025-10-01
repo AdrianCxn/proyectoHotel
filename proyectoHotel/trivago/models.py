@@ -227,17 +227,6 @@ class Productos(models.Model):
         db_table = 'productos'
 
 
-class Rerestaurantes(models.Model):
-    id_restaurant = models.AutoField(db_column='ID_RESTAURANT', primary_key=True)  # Field name made lowercase.
-    id_huesped = models.ForeignKey(Huespedes, models.DO_NOTHING, db_column='ID_HUESPED')  # Field name made lowercase.
-    personas = models.IntegerField(db_column='PERSONAS')  # Field name made lowercase.
-    fecha_hora = models.DateTimeField(db_column='FECHA_HORA')  # Field name made lowercase.
-    activa = models.IntegerField(db_column='ACTIVA')  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'rerestaurantes'
-
 class Descuentos(models.Model):
     id_descuento = models.AutoField(db_column='ID_DESCUENTO', primary_key=True)
     fecha_inicio = models.DateField(db_column='FECHA_INICIO')
@@ -247,6 +236,7 @@ class Descuentos(models.Model):
     class Meta:
         managed = False
         db_table = 'descuentos'
+
 
 class Reservas(models.Model):
     id_reserva = models.AutoField(db_column='ID_RESERVA', primary_key=True)  # Field name made lowercase.
@@ -264,10 +254,22 @@ class Reservas(models.Model):
         managed = False
         db_table = 'reservas'
 
+class Rerestaurantes(models.Model):
+    id_restaurant = models.AutoField(db_column='ID_RESTAURANT', primary_key=True)  # Field name made lowercase.
+    id_huesped = models.ForeignKey(Huespedes, models.DO_NOTHING, db_column='ID_HUESPED')  # Field name made lowercase.
+    personas = models.IntegerField(db_column='PERSONAS')  # Field name made lowercase.
+    fecha = models.DateField(db_column='FECHA')
+    hora = models.TimeField(db_column='HORA')   # Field name made lowercase.
+    activa = models.IntegerField(db_column='ACTIVA')  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = 'rerestaurantes'
+
 
 class Restaurant(models.Model):
     id_rest = models.AutoField(db_column='ID_REST', primary_key=True)  # Field name made lowercase.
-    id_staff = models.ForeignKey('Staffs', models.DO_NOTHING, db_column='ID_STAFF')  # Field name made lowercase.
+    id_staff = models.ForeignKey('Staffs', models.DO_NOTHING, db_column='ID_STAFF', null=True, blank=True)  # Field name made lowercase.
     id_restaurant = models.ForeignKey(Rerestaurantes, models.DO_NOTHING, db_column='ID_RESTAURANT')  # Field name made lowercase.
 
     class Meta:
@@ -308,6 +310,3 @@ class Tipos(models.Model):
     class Meta:
         managed = False
         db_table = 'tipos'  # Field name made lowercase.
-
-
-
