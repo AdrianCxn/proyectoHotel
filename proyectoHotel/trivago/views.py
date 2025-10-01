@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-from .models import Habitaciones, Huespedes, Reservas, Tipos
+from .models import Habitaciones, Huespedes, Reservas, Tipos, Descuentos
 
 # Create your views here.
 # Vista para index
@@ -12,7 +12,10 @@ def index(request):
 
 # Vistas para habitaciones
 def tipohabitacion(request):
-    return render(request, "trivago/tipohabitacion.html")
+    tipos = Tipos.objects.all()
+    return render(request, "trivago/tipohabitacion.html", {
+        "tipos": tipos
+    })
 
 def habitaciones(request):
     habitaciones = Habitaciones.objects.all()
@@ -95,9 +98,70 @@ def eliminar_habitacion(request, id):
 def staff(request):
     return render(request, "trivago/staff.html")
 
-
 def descuentos(request):
-    return render(request, "trivago/descuentos.html")
+    descuentos = Descuentos.objects.all()
+    return render(request, "trivago/descuentos.html", {
+        "descuentos": descuentos
+    })
+
+def agregar_descuento(request):
+    descuentos = Descuentos.objects.all()
+    if request.method == "POST":
+        fecha_inicio = request.POST.get("fecha_inicio")
+        fecha_fin = request.POST.get("fecha_fin")
+        porcentaje = request.POST.get("descuento")
+
+        try:
+            nuevo_descuento = Descuentos(
+                fecha_inicio=fecha_inicio,
+                fecha_fin=fecha_fin,
+                descuento=porcentaje
+            )
+            nuevo_descuento.save()
+            messages.success(request, "Descuento agregado exitosamente.")
+            return redirect('descuentos') 
+        except IntegrityError:
+            messages.error(request, "Error: Ya existe un descuento con estos datos.")
+        except Exception as e:
+            messages.error(request, f"Error al agregar el descuento: {e}")
+
+    return render(request, "trivago/agregar_descuento.html")
+
+def editar_descuento(request, id):
+    descuento = get_object_or_404(Descuentos, pk=id)
+
+    if request.method == "POST":
+        descuento.fecha_inicio = request.POST.get('fecha_inicio')
+        descuento.fecha_fin = request.POST.get('fecha_fin')
+        descuento.descuento = request.POST.get('descuento')
+
+        try:
+            descuento.save()
+            messages.success(request, "Descuento actualizado exitosamente.")
+            return redirect('descuentos')  # redirige a la lista de descuentos
+        except IntegrityError:
+            messages.error(request, "Error: Ya existe un descuento con estos datos.")
+        except Exception as e:
+            messages.error(request, f"Error al actualizar el descuento: {e}")
+
+    return render(request, "trivago/editar_descuento.html", {
+        "descuento": descuento
+    })
+
+def eliminar_descuento(request, id):
+    descuentos = get_object_or_404(Descuentos, pk=id)
+
+    if request.method == "POST":
+        try:
+            descuentos.delete()
+            messages.success(request, "Descuento eliminado exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar el descuento: {e}")
+        return redirect("descuentos")
+    else:
+        return redirect("descuentos")
+    
+
 
 
 def huespedes(request):

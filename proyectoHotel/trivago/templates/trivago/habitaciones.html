@@ -46,7 +46,9 @@
 							<th>Numero</th>
 							<th>Piso</th>
 							<th>Tipo</th>
+							<th>Vista</th>
 							<th>Ocupado</th>
+							<th>Acciones</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -54,7 +56,8 @@
 						<tr>
 							<td>{{ habitacion.numero }}</td>
 							<td>{{ habitacion.piso }}</td>
-							<td>{{ habitacion.id_tipo.tipo }}</td>
+							<td>{{ habitacion.id_tipo.tipo }} </td>
+							<td>{{ habitacion.id_tipo.vista }}</td>
 							<td>{% if habitacion.ocupado %}Ocupado{% else %}Disponible{% endif %}</td>
 							<td>
 								<!-- Botón Editar -->

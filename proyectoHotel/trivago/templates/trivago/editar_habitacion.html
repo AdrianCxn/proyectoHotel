@@ -165,7 +165,7 @@
 						<select name="id_tipo">
 							{% for tipo in tipos %}
 							<option value="{{ tipo.id_tipo }}" {% if habitacion.id_tipo_id == tipo.id_tipo %}selected{% endif %}>
-								{{ tipo.tipo }}
+								{{ tipo.tipo }} - {{ tipo.vista }}
 							</option>
 							{% endfor %}
 						</select>
