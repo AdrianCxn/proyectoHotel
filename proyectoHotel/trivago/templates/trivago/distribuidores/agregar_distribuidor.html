@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{% static 'trivago/rest_style.css' %}">
-	<title>Editar | Staff</title>
+	<title>Agregar | Distribuidor</title>
 </head>
 
 <style>
@@ -145,71 +145,34 @@
 
 	<div class="main-container">
 		<div class="container">
-
-			<h1>Editar staff {{ staff.id_staff }}: {{ staff.nombre }} {{ staff.pr_apellido }}</h1>
-			{% if messages %}
-				<div class="messages">
-					{% for message in messages %}
-						<div class="alert alert-info">{{ message }}</div>
-					{% endfor %}
-				</div>
-			{% endif %}
-
+			<h1>Agregar distribuidor</h1>
 			<form method="POST" class="mb-4">
 				{% csrf_token %}
-				<div class="mb-3">
-					<label class="form-label">Nombre</label>
-					<input type="text" name="nombre" maxlength="100" value="{{ staff.nombre }}" required>
-				</div>
-
-				<div class="mb-3">
-					<label class="form-label">Apellido Paterno</label>
-					<input type="text" name="pr_apellido" maxlength="100" value="{{ staff.pr_apellido }}" required>
-				</div>
 
                 <div class="mb-3">
-					<label class="form-label">Apellido Materno</label>
-					<input type="text" name="se_apellido" maxlength="100" value="{{ staff.se_apellido }}" required>
+					<label class="form-label">Marca</label>
+					<input type="text" name="marca" maxlength="30" value="{{ distribuidor.marca }}"
+						class="form-control" placeholder="Ej. Colgate" required>
 				</div>
 
                 <div class="mb-3">
 					<label class="form-label">Teléfono</label>
-					<input type="text" name="telefono" maxlength="100" pattern="[0-9]+" value="{{ staff.telefono }}" required>
+					<input type="text" name="telefono" maxlength="15" pattern="[0-9]+" value="{{ distribuidor.telefono }}"  placeholder="Ej. 8711111111" required>
 				</div>
 
 				<div class="mb-3">
 					<label class="form-label">Correo electrónico</label>
-					<input type="email" name="email" maxlength="100" value="{{ staff.email }}" required>
+					<input type="email" name="email" maxlength="100" value="{{ distribuidor.email }}"  placeholder="Ej. correo@ejemplo.com" required>
 				</div>
-
-				<div class="mb-3">
-					<label class="form-label">Edad</label>
-					<input type="number" name="edad" maxlength="15" pattern="[0-9]+" value="{{ staff.edad }}" required>
-				</div>
-
-                <div class="mb-3">
-					<label class="form-label">Área de trabajo</label>
-					<input type="text" name="area_trabajo" maxlength="100" value="{{ staff.area_trabajo }}" required>
-				</div>
-
-                <div class="mb-3">
-					<label class="form-label">Salario</label>
-					<input type="text" name="salario" maxlength="100" value="{{ staff.salario }}" required>
-				</div>
-
-                <div class="mb-3">
-					<label class="form-label">Turno</label>
-					<input type="text" name="turno" maxlength="100" value="{{ staff.turno }}" required>
-				</div>
-
+				
 				<div class="form-actions">
-					<a href="{% url 'staff' %}" class="btn btn-secondary">Cancelar</a>
-					<button type="submit" class="btn btn-primary">Aplicar cambios</button>
+					<a href="{% url 'distribuidores' %}" class="btn btn-secondary">Cancelar</a>
+					<button type="submit" class="btn btn-primary">Agregar</button>
 				</div>
 			</form>
 		</div>
 		<div class="image">
-			<img src="https://th.bing.com/th/id/R.1e3f16dc104230547a8ba7888e0f08fb?rik=1UGfcmLbNUIH7g&pid=ImgRaw&r=0" alt="Titulo">
+			<img src="https://cdn.shopify.com/s/files/1/0323/9149/5817/files/MG_0911_2.jpg?v=1619109702" alt="Titulo">
 		</div>
 	</div>
 </html>

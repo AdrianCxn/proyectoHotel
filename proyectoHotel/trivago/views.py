@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos
+from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos, Distribuidores
 
 # Create your views here.
 # Vista para index
@@ -17,7 +17,6 @@ def tipohabitacion(request):
     return render(request, "trivago/tipohabitacion/tipohabitacion.html", {
         "tipos": tipos
     })
-
 
 def editar_tipohabitacion(request, id):
     tipo = get_object_or_404(Tipos, pk=id)
@@ -42,7 +41,6 @@ def habitaciones(request):
     return render(request, "trivago/habitaciones/habitaciones.html", {
         "habitaciones": habitaciones
     })
-
 
 def agregar_habitacion(request):
     tipos = Tipos.objects.all()
@@ -73,7 +71,6 @@ def agregar_habitacion(request):
 
     return render(request, "trivago/habitaciones/agregar_habitacion.html", {'tipos': tipos})
 
-
 def editar_habitacion(request, id):
     habitacion = get_object_or_404(Habitaciones, pk=id)
     tipos = Tipos.objects.all()
@@ -100,7 +97,6 @@ def editar_habitacion(request, id):
         "tipos": tipos
     })
 
-
 def eliminar_habitacion(request, id):
     habitacion = get_object_or_404(Habitaciones, pk=id)
 
@@ -121,7 +117,6 @@ def staff(request):
     return render(request, "trivago/staff/staff.html", {
         "staff": staff
     })
-
 
 def agregar_staff(request):
     if request.method == "POST":
@@ -164,7 +159,6 @@ def agregar_staff(request):
 
     return render(request, "trivago/staff/agregar_staff.html")
 
-
 def editar_staff(request, id):
     staff = get_object_or_404(Staffs, pk=id)
 
@@ -191,7 +185,6 @@ def editar_staff(request, id):
     return render(request, "trivago/staff/editar_staff.html", {
         "staff": staff
     })
-
 
 def eliminar_staff(request, id):
     staff = get_object_or_404(Staffs, pk=id)
@@ -361,19 +354,67 @@ def eliminar_producto(request, id):
         return redirect("productos")
 
 
-
-
-
-
-
-
-
-
-
-
 def inventario(request):
     return render(request, "trivago/inventario.html")
 
 
 def distribuidores(request):
-    return render(request, "trivago/distribuidores.html")
+    distribuidores = Distribuidores.objects.all()
+    return render(request, "trivago/distribuidores/distribuidores.html", {
+        "distribuidores": distribuidores
+    })
+
+def agregar_distribuidor(request):
+    distribuidores = Distribuidores.objects.all()
+    if request.method == "POST": 
+        marca = request.POST.get("marca")
+        telefono = request.POST.get("telefono")
+        email = request.POST.get("email")
+        try:
+            nuevo_distribuidor = Distribuidores(
+                marca=marca,
+                telefono=telefono,
+                email=email
+            )
+            nuevo_distribuidor.save()
+            messages.success(request, "Distribuidor agregado exitosamente.")
+            return redirect('distribuidores') 
+        except IntegrityError:
+            messages.error(request, "Error: Ya existe ese distribuidor.")
+        except Exception as e:
+            messages.error(request, f"Error al agregar nuevo distribuidor: {e}")
+
+    return render(request, "trivago/distribuidores/agregar_distribuidor.html")
+
+def editar_distribuidor(request, id):
+    distribuidor = get_object_or_404(Distribuidores, pk=id)
+
+    if request.method == "POST":
+        distribuidor.telefono = request.POST.get('telefono')
+        distribuidor.email = request.POST.get('email')
+
+        try:
+            distribuidor.save()
+            messages.success(request, "Distribuidor actualizado exitosamente.")
+            return redirect('distribuidores') 
+        except IntegrityError:
+            messages.error(request, "Error: Ya existe un distribuidor con estos datos.")
+        except Exception as e:
+            messages.error(request, f"Error al actualizar el distribuidor: {e}")
+
+    return render(request, "trivago/distribuidores/editar_distribuidor.html", {
+        "distribuidor": distribuidor
+    })  
+
+def eliminar_distribuidor(request, id):
+    distribuidores = get_object_or_404(Distribuidores, pk=id)
+
+    if request.method == "POST":
+        try:
+            distribuidores.delete()
+            messages.success(request, "Distribuidor eliminado exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar el distribuidor: {e}")
+        return redirect("distribuidores")
+    else:
+        return redirect("distribuidores")

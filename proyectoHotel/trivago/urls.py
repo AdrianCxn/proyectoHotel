@@ -15,6 +15,9 @@ urlpatterns = [
 
     # Paths para administracion
     path('staff/', views.staff, name='staff'),
+    path('agregar_staff/', views.agregar_staff, name='agregar_staff'),
+    path('editar_staff/<int:id>/', views.editar_staff, name='editar_staff'),
+    path('eliminar_staff/<int:id>/', views.eliminar_staff, name='eliminar_staff'),
 
     path('descuentos/', views.descuentos, name='descuentos'),
     path('agregar_descuento/', views.agregar_descuento, name='agregar_descuento'),
@@ -38,5 +41,10 @@ urlpatterns = [
 
 
     path('inventario/', views.inventario, name='inventario'),
-    path('distribuidores/', views.distribuidores, name='distribuidores')
+
+
+    path('distribuidores/', views.distribuidores, name='distribuidores'),
+    path('agregar_distribuidor/', views.agregar_distribuidor, name='agregar_distribuidor'),
+    path('editar_distribuidor/<int:id>/', views.editar_distribuidor, name='editar_distribuidor'),
+    path('eliminar_distribuidor/<int:id>/', views.eliminar_distribuidor, name='eliminar_distribuidor')
 ]
