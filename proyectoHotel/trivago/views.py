@@ -265,12 +265,25 @@ def eliminar_descuento(request, id):
     
 
 
-
+# Vistas para huespedes
 def huespedes(request):
     huespedes = Huespedes.objects.all()
-    return render(request, "trivago/huespedes.html", {
+    return render(request, "trivago/huespedes/huespedes.html", {
         "huespedes": huespedes
     })
+
+def eliminar_huesped(request, id):
+    huespedes = get_object_or_404(Huespedes, pk=id)
+
+    if request.method == "POST":
+        try:
+            huespedes.delete()
+            messages.success(request, "Huesped eliminado exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar la cuenta del huesped: {e}")
+        return redirect('huespedes')
+    else:
+        return redirect("huespedes")
 
 
 def reservas(request):
@@ -416,6 +429,7 @@ def eliminar_distribuidor(request, id):
     else:
         return redirect("distribuidores")
     
+
 # Vistas para inventarios
 def inventario(request):
     inventarios = Inventarios.objects.all()
@@ -458,8 +472,6 @@ def agregar_inventario(request):
         "productos": productos
     })
    
-from .models import Inventarios, Productos, Distribuidores
-
 def editar_inventario(request, id):
     inventario = get_object_or_404(Inventarios, pk=id)
     distribuidores = Distribuidores.objects.all()
@@ -467,7 +479,6 @@ def editar_inventario(request, id):
     if request.method == "POST":
         id_distribuidor = request.POST.get("id_distribuidor")
         cantidad = request.POST.get("cantidad")
-
         inventario.id_distribuidor = Distribuidores.objects.get(pk=id_distribuidor)
         inventario.cantidad = cantidad
         inventario.save()
@@ -479,7 +490,6 @@ def editar_inventario(request, id):
         "productos": productos,
         "distribuidores": distribuidores,
     })
-
 
 def eliminar_inventario(request, id):
     inventario = get_object_or_404(Inventarios, pk=id)

@@ -44,9 +44,10 @@ urlpatterns = [
     path('editar_distribuidor/<int:id>/', views.editar_distribuidor, name='editar_distribuidor'),
     path('eliminar_distribuidor/<int:id>/', views.eliminar_distribuidor, name='eliminar_distribuidor'),
 
-
-
+    # Paths para huepedes
     path('huespedes/', views.huespedes, name='huespedes'),
+    path('eliminar_huesped/<int:id>/', views.eliminar_huesped, name='eliminar_huesped'),
+
     path('reservas/', views.reservas, name='reservas'),
     path('consumos/', views.consumos, name='consumos'),
 
