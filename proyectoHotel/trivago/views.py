@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-from .models import Habitaciones, Huespedes, Reservas, Tipos
+from .models import Habitaciones, Tipos
 
 # Create your views here.
 # Vista para index
@@ -101,17 +101,11 @@ def descuentos(request):
 
 
 def huespedes(request):
-    huespedes = Huespedes.objects.all()
-    return render(request, "trivago/huespedes.html", {
-        "huespedes": huespedes
-    })
+    return render(request, "trivago/huespedes.html")
 
 
 def reservas(request):
-    reservas = Reservas.objects.all()
-    return render(request, "trivago/reservas.html", {
-        "reservas": reservas
-    })
+    return render(request, "trivago/reservas.html")
 
 
 def consumos(request):
