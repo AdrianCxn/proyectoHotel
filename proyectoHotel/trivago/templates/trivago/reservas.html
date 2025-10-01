@@ -1,0 +1,32 @@
+<p> Hola Andrea o quien vea este codigo :/</p>
+<p> esto es solo para pROBAR. Sientete libre de borrarlo cuando vayas a implementar lo siguiente</p>
+
+<img src="https://media1.tenor.com/m/vwA2pHu4SXYAAAAd/astolfo-femboy.gif" alt="femboy gif">
+<h2>Lista de Reservas</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Habitación</th>
+            <th>Llegada</th>
+            <th>Salida</th>
+            <th>Adultos</th>
+            <th>Niños</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reserva in reservas %}
+        <tr>
+            <td>{{ reserva.id_reserva }}</td>
+            <td>{{ reserva.id_habitacion.numero }}</td>
+            <td>{{ reserva.fecha_llegada }}</td>
+            <td>{{ reserva.fecha_salida }}</td>
+            <td>{{ reserva.cantidad_a }}</td>
+            <td>{{ reserva.cantidad_n }}</td>
+            <td>{% if reserva.activa %}Activa{% else %}Cerrada{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

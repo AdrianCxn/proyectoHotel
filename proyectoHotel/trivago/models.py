@@ -244,7 +244,7 @@ class Reservas(models.Model):
     id_habitacion = models.ForeignKey(Habitaciones, models.DO_NOTHING, db_column='ID_HABITACION')  # Field name made lowercase.
     fecha_llegada = models.DateTimeField(db_column='FECHA_LLEGADA')  # Field name made lowercase.
     fecha_salida = models.DateTimeField(db_column='FECHA_SALIDA')  # Field name made lowercase.
-    
+    capacidad_total = models.IntegerField(db_column='CAPACIDAD_TOTAL')  # Field name made lowercase.
     cantidad_a = models.IntegerField(db_column='CANTIDAD_A')  # Field name made lowercase.
     cantidad_n = models.IntegerField(db_column='CANTIDAD_N')  # Field name made lowercase.
     metodo_pago = models.CharField(db_column='METODO_PAGO', max_length=8, blank=True, null=True)  # Field name made lowercase.
@@ -288,7 +288,7 @@ class Tipos(models.Model):
     tipo = models.CharField(db_column='TIPO', max_length=8, blank=True, null=True)  # Field name made lowercase.
     cama = models.IntegerField(db_column='CAMA')  # Field name made lowercase.
     baños = models.IntegerField(db_column='BAÑOS')  # Field name made lowercase.
-
+    capacidad_total = models.IntegerField(db_column='CAPACIDAD_TOTAL')  # Field name made lowercase.
     capacidad_a = models.IntegerField(db_column='CAPACIDAD_A')  # Field name made lowercase.
     capacidad_n = models.IntegerField(db_column='CAPACIDAD_N')  # Field name made lowercase.
     cocineta = models.IntegerField(db_column='COCINETA')  # Field name made lowercase.

@@ -217,6 +217,7 @@ def crear_reserva(request):
                 fecha_salida=fs,
                 cantidad_a=adultos_i,
                 cantidad_n=ninos_i,
+                capacidad_total=total_personas,
                 metodo_pago=metodo_pago,
                 activa=1,
                 id_descuento=descuento_obj if descuento_obj else None
