@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{% static 'trivago/rest_style.css' %}">
-	<title>Agregar | Habitaciones</title>
+	<title>Editar | Habitaciones</title>
 </head>
 
 <style>
@@ -35,19 +35,19 @@
 
 	.container {
 		padding: 30px 40px;
-		width: 300px;
+		width: 400px;
 		background-color: #fff;
 	}
 
 	.container h1 {
-		font-size: 25px;
+		font-size: 30px;
 		letter-spacing: 0px;
 		font-weight: 700;
 		text-align: center;
 		color: rgb(10, 15, 60);
 		position: relative;
 		text-transform: uppercase;
-		margin-bottom: 40px;
+		margin-bottom: 30px;
 	}
 
 	input {
@@ -72,13 +72,24 @@
 		color: rgb(21, 43, 84);
 	}
 
+	.select-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between; /* los separa uniformemente */
+    margin-bottom: 20px;
+}
+
+.select-actions .mb-3 {
+    flex: 1; /* que cada select ocupe la mitad del contenedor */
+}
+
 	select {
 		width: 100%;
 		padding: 8px;
 		border: 1px solid rgb(36, 44, 112);
 		border-radius: 5px;
 		background-color: #f1f1f1;
-		margin-bottom: 30px;
+		margin-bottom: 10px;
 		font-size: 15px;
 	}
 
@@ -132,44 +143,36 @@
 		<div class="preload-wave"></div>
 	</div>
 
-
 	<div class="main-container">
 		<div class="container">
-			<h1>Agregar habitación</h1>
+			<h1>Editar descuento {{ descuento.id_descuento }}</h1>
 			<form method="POST" class="mb-4">
 				{% csrf_token %}
 				<div class="mb-3">
-					<label class="form-label">Número de habitación</label>
-					<input type="text" name="numero" maxlength="4" pattern="[0-9]+" width=48
-						value="{{ habitacion.numero }}" placeholder="Ej. 101" required>
+					<label class="form-label">Fecha inicio</label>
+					<input type="date" name="fecha_inicio" value="{{ descuento.fecha_inicio|date:'Y-m-d' }}"
+						class="form-control" required>
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label">Piso</label>
-					<input type="text" name="piso" maxlength="2" pattern="[0-9]+" value="{{ habitacion.piso }}"
-						placeholder="Ej. 1" required>
+					<label class="form-label">Fecha fin</label>
+					<input type="date" name="fecha_fin" value="{{ descuento.fecha_fin|date:'Y-m-d' }}"
+						class="form-control" required>
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label">Tipo</label>
-					<select name="id_tipo">
-						{% for tipo in tipos %}
-						<option value="{{ tipo.id_tipo }}">{{ tipo.tipo }} - {{ tipo.vista }}</option>
-						{% endfor %}
-					</select>
+					<label class="form-label">Porcentaje descuento</label>
+					<input type="number" name="descuento" max="0.99" min="0.01" step="0.01" value="{{ descuento.descuento }}"
+	                class="form-control" required>
 				</div>
-
 				<div class="form-actions">
-					<a href="{% url 'habitaciones' %}" class="btn btn-secondary">Cancelar</a>
-					<button type="submit" class="btn btn-primary">Agregar</button>
+					<a href="{% url 'descuentos' %}" class="btn btn-secondary">Cancelar</a>
+					<button type="submit" class="btn btn-primary">Aplicar cambios</button>
 				</div>
-
 			</form>
 		</div>
 		<div class="image">
 			<img src="https://www.zeysey.com/storage/image/project/01HT8QFH9KK6RK1J3Q6GKPD5VM.jpg" alt="Titulo">
 		</div>
 	</div>
-
-
 </html>

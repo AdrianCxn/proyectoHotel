@@ -52,8 +52,6 @@ def registro(request):
             id_reserva = None
         )
 
-
-
         # Eto e' para crear el usuario con nombre y apellido porque no se guarda automaticamente
         user = User.objects.create_user(
             username=username,

@@ -238,6 +238,15 @@ class Rerestaurantes(models.Model):
         managed = False
         db_table = 'rerestaurantes'
 
+class Descuentos(models.Model):
+    id_descuento = models.AutoField(db_column='ID_DESCUENTO', primary_key=True)
+    fecha_inicio = models.DateField(db_column='FECHA_INICIO')
+    fecha_fin = models.DateField(db_column='FECHA_FIN')
+    descuento = models.DecimalField(db_column='DESCUENTO', max_digits=8, decimal_places=2)
+
+    class Meta:
+        managed = False
+        db_table = 'descuentos'
 
 class Reservas(models.Model):
     id_reserva = models.AutoField(db_column='ID_RESERVA', primary_key=True)  # Field name made lowercase.
@@ -294,8 +303,11 @@ class Tipos(models.Model):
     cocineta = models.IntegerField(db_column='COCINETA')  # Field name made lowercase.
     televisor = models.IntegerField(db_column='TELEVISOR')  # Field name made lowercase.
     vista = models.CharField(db_column='VISTA', max_length=7, blank=True, null=True)  # Field name made lowercase.
-    precio = models.DecimalField(db_column='PRECIO', max_digits=8, decimal_places=2)  # Field name made lowercase.
-
+    precio = models.DecimalField(db_column='PRECIO', max_digits=8, decimal_places=2)
+    
     class Meta:
         managed = False
-        db_table = 'tipos'
+        db_table = 'tipos'  # Field name made lowercase.
+
+
+

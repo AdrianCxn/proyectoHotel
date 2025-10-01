@@ -135,32 +135,30 @@
 
 	<div class="main-container">
 		<div class="container">
-			<h1>Agregar habitación</h1>
+			<h1>Agregar descuento</h1>
 			<form method="POST" class="mb-4">
 				{% csrf_token %}
 				<div class="mb-3">
-					<label class="form-label">Número de habitación</label>
-					<input type="text" name="numero" maxlength="4" pattern="[0-9]+" width=48
-						value="{{ habitacion.numero }}" placeholder="Ej. 101" required>
+					<label class="form-label">Fecha inicio</label>
+					<input type="date" name="fecha_inicio" value="{{ descuento.fecha_inicio|date:'Y-m-d' }}"
+						class="form-control" required>
+				</div>
+
+                <div class="mb-3">
+					<label class="form-label">Fecha fin</label>
+					<input type="date" name="fecha_fin" value="{{ descuento.fecha_fin|date:'Y-m-d' }}"
+						class="form-control" required>
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label">Piso</label>
-					<input type="text" name="piso" maxlength="2" pattern="[0-9]+" value="{{ habitacion.piso }}"
-						placeholder="Ej. 1" required>
+					<label class="form-label">Porcentaje descuento</label>
+					<input type="number" name="descuento" max="0.99" min="0.01" step="0.01" value="{{ descuento.descuento }}"
+	                class="form-control" required>
 				</div>
 
-				<div class="mb-3">
-					<label class="form-label">Tipo</label>
-					<select name="id_tipo">
-						{% for tipo in tipos %}
-						<option value="{{ tipo.id_tipo }}">{{ tipo.tipo }} - {{ tipo.vista }}</option>
-						{% endfor %}
-					</select>
-				</div>
 
 				<div class="form-actions">
-					<a href="{% url 'habitaciones' %}" class="btn btn-secondary">Cancelar</a>
+					<a href="{% url 'descuentos' %}" class="btn btn-secondary">Cancelar</a>
 					<button type="submit" class="btn btn-primary">Agregar</button>
 				</div>
 
