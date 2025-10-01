@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos, Distribuidores
+from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos, Distribuidores, Inventarios
 
 # Create your views here.
 # Vista para index
@@ -11,7 +11,7 @@ def index(request):
     return render(request, "trivago/index.html")
 
 
-# Vistas para habitaciones
+# Vistas para tipo de habitaciones
 def tipohabitacion(request):
     tipos = Tipos.objects.all()
     return render(request, "trivago/tipohabitacion/tipohabitacion.html", {
@@ -35,7 +35,7 @@ def editar_tipohabitacion(request, id):
         "tipo": tipo
     })
 
-
+# Vistas para habitaciones
 def habitaciones(request):
     habitaciones = Habitaciones.objects.all()
     return render(request, "trivago/habitaciones/habitaciones.html", {
@@ -111,7 +111,7 @@ def eliminar_habitacion(request, id):
         return redirect("habitaciones")
 
 
-# Vistas para administracion
+# Vistas para staff
 def staff(request):
     staff = Staffs.objects.all()
     return render(request, "trivago/staff/staff.html", {
@@ -199,7 +199,7 @@ def eliminar_staff(request, id):
     else:
         return redirect("staff")
 
-
+# Vistas para descuentos
 def descuentos(request):
     descuentos = Descuentos.objects.all()
     return render(request, "trivago/descuentos/descuentos.html", {
@@ -354,10 +354,7 @@ def eliminar_producto(request, id):
         return redirect("productos")
 
 
-def inventario(request):
-    return render(request, "trivago/inventario.html")
-
-
+# Vistas para distribuidores
 def distribuidores(request):
     distribuidores = Distribuidores.objects.all()
     return render(request, "trivago/distribuidores/distribuidores.html", {
@@ -418,3 +415,81 @@ def eliminar_distribuidor(request, id):
         return redirect("distribuidores")
     else:
         return redirect("distribuidores")
+    
+# Vistas para inventarios
+def inventario(request):
+    inventarios = Inventarios.objects.all()
+    return render(request, "trivago/inventarios/inventario.html", {
+        "inventarios": inventarios
+    })
+
+def agregar_inventario(request):
+    productos_usados = Inventarios.objects.values_list("id_producto", flat=True)
+    productos = Productos.objects.exclude(id_producto__in=productos_usados)
+    distribuidores = Distribuidores.objects.all()
+    
+    if request.method == "POST":
+        id_producto = request.POST.get("id_producto")
+        id_distribuidor = request.POST.get("id_distribuidor")
+        cantidad = request.POST.get("cantidad")
+
+        try:
+            productos = Productos.objects.get(id_producto=id_producto)
+            distribuidores = Distribuidores.objects.get(id_distribuidor=id_distribuidor)  
+            nuevo_inventario = Inventarios(
+                id_producto=productos,
+                id_distribuidor=distribuidores,
+                cantidad=cantidad,
+            )
+            nuevo_inventario.save()
+            messages.success(request, "Nuevo registro agregado al inventario exitosamente.")
+            return redirect('inventario')
+        except Productos.DoesNotExist:
+            messages.error(request, "El producto no existe.")
+        except Distribuidores.DoesNotExist:
+            messages.error(request, "El distribuidor no existe.")
+        except IntegrityError:
+            messages.error(request, "Error: El registro ya existe.")
+        except Exception as e:
+            messages.error(request, f"Error al agregar el registro: {e}")
+    return render(request, "trivago/inventarios/agregar_inventario.html", {
+        "inventario": inventario,
+        "distribuidores": distribuidores,
+        "productos": productos
+    })
+   
+from .models import Inventarios, Productos, Distribuidores
+
+def editar_inventario(request, id):
+    inventario = get_object_or_404(Inventarios, pk=id)
+    distribuidores = Distribuidores.objects.all()
+
+    if request.method == "POST":
+        id_distribuidor = request.POST.get("id_distribuidor")
+        cantidad = request.POST.get("cantidad")
+
+        inventario.id_distribuidor = Distribuidores.objects.get(pk=id_distribuidor)
+        inventario.cantidad = cantidad
+        inventario.save()
+        messages.success(request, "Inventario actualizado exitosamente.")
+        return redirect("inventario")
+
+    return render(request, "trivago/inventarios/editar_inventario.html", {
+        "inventario": inventario,
+        "productos": productos,
+        "distribuidores": distribuidores,
+    })
+
+
+def eliminar_inventario(request, id):
+    inventario = get_object_or_404(Inventarios, pk=id)
+
+    if request.method == "POST":
+        try:
+            inventario.delete()
+            messages.success(request, "Registro eliminado exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar el registro: {e}")
+        return redirect('inventario')
+    else:
+        return redirect("inventario")
