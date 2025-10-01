@@ -7,9 +7,9 @@ from datetime import datetime
 from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos, Distribuidores, Inventarios, Rerestaurantes, Restaurant
 
 # Vista para index
-def index(request):
+def menu(request):
     tipos = Tipos.objects.all()
-    return render(request, "trivago/index.html")
+    return render(request, "trivago/menu.html")
 
 
 # Vistas para tipo de habitaciones

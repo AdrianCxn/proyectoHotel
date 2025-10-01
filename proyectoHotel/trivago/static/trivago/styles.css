@@ -26,6 +26,16 @@ ul {
     float: right;
 }
 
+.IRISVAGO h1 {
+  padding: 5px;
+  font-size: 40px;
+  font-weight: bold;
+  color: bisque;
+  text-decoration: line-through  rgb(29, 102, 126);
+  font-family: 'Times New Roman', Times, serif;
+  margin-right: 10px;
+}
+
 ul li a {
     display: block;
     color: white;
