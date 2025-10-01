@@ -99,17 +99,6 @@ class Cuentas(models.Model):
         db_table = 'cuentas'
 
 
-class Descuentos(models.Model):
-    id_descuento = models.AutoField(db_column='ID_DESCUENTO', primary_key=True)  # Field name made lowercase.
-    fecha_inicio = models.DateField(db_column='FECHA_INICIO')  # Field name made lowercase.
-    fecha_fin = models.DateField(db_column='FECHA_FIN')  # Field name made lowercase.
-    descuento = models.DecimalField(db_column='DESCUENTO', max_digits=6, decimal_places=2)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'descuentos'
-
-
 class Distribuidores(models.Model):
     id_distribuidor = models.AutoField(db_column='ID_DISTRIBUIDOR', primary_key=True)  # Field name made lowercase.
     marca = models.CharField(db_column='MARCA', max_length=50)  # Field name made lowercase.
@@ -226,16 +215,15 @@ class Productos(models.Model):
         db_table = 'productos'
 
 
-class Rerestaurantes(models.Model):
-    id_restaurant = models.AutoField(db_column='ID_RESTAURANT', primary_key=True)  # Field name made lowercase.
-    id_huesped = models.ForeignKey(Huespedes, models.DO_NOTHING, db_column='ID_HUESPED')  # Field name made lowercase.
-    personas = models.IntegerField(db_column='PERSONAS')  # Field name made lowercase.
-    fecha_hora = models.DateTimeField(db_column='FECHA_HORA')  # Field name made lowercase.
-    activa = models.IntegerField(db_column='ACTIVA')  # Field name made lowercase.
+class Descuentos(models.Model):
+    id_descuento = models.AutoField(db_column='ID_DESCUENTO', primary_key=True)
+    fecha_inicio = models.DateField(db_column='FECHA_INICIO')
+    fecha_fin = models.DateField(db_column='FECHA_FIN')
+    descuento = models.DecimalField(db_column='DESCUENTO', max_digits=8, decimal_places=2)
 
     class Meta:
         managed = False
-        db_table = 'rerestaurantes'
+        db_table = 'descuentos'
 
 
 class Reservas(models.Model):
@@ -255,10 +243,22 @@ class Reservas(models.Model):
         managed = False
         db_table = 'reservas'
 
+class Rerestaurantes(models.Model):
+    id_restaurant = models.AutoField(db_column='ID_RESTAURANT', primary_key=True)  # Field name made lowercase.
+    id_huesped = models.ForeignKey(Huespedes, models.DO_NOTHING, db_column='ID_HUESPED')  # Field name made lowercase.
+    personas = models.IntegerField(db_column='PERSONAS')  # Field name made lowercase.
+    fecha = models.DateField(db_column='FECHA')
+    hora = models.TimeField(db_column='HORA')   # Field name made lowercase.
+    activa = models.IntegerField(db_column='ACTIVA')  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = 'rerestaurantes'
+
 
 class Restaurant(models.Model):
     id_rest = models.AutoField(db_column='ID_REST', primary_key=True)  # Field name made lowercase.
-    id_staff = models.ForeignKey('Staffs', models.DO_NOTHING, db_column='ID_STAFF')  # Field name made lowercase.
+    id_staff = models.ForeignKey('Staffs', models.DO_NOTHING, db_column='ID_STAFF', null=True, blank=True)  # Field name made lowercase.
     id_restaurant = models.ForeignKey(Rerestaurantes, models.DO_NOTHING, db_column='ID_RESTAURANT')  # Field name made lowercase.
 
     class Meta:

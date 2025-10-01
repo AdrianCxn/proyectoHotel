@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{% static 'trivago/rest_style.css' %}">
+    <title>Menu Principal</title>
+</head>
+<style>
+.pfp { 
+    width: 150px;
+    height: 150px;
+    border-radius: 100%; 
+    overflow: hidden; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+} 
+
+.pfp2 { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+}
+
+</style>
+<body>
+    <!-- Menu -->
+    <div class="preload">
+        <div class="preload-wave"></div>
+    </div>
+
+    {% include 'trivago/index.html' %}
+    <div class="main-container">
+        <div class="opciones">
+                <div class="pfp">
+                    <img src="https://photos.peopleimages.com/picture/202302/2618651-portrait-business-and-woman-with-arms-crossed-in-office-corporate-company-and-management-in-colombia.-business-executive-mature-female-and-smile-for-leadership-professional-trust-or-vision-of-ceo-fit_400_400.jpg" class="pfp2">
+                </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -2,13 +2,14 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos, Distribuidores, Inventarios
+from django.utils import timezone
+from datetime import datetime
+from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos, Distribuidores, Inventarios, Rerestaurantes, Restaurant
 
-# Create your views here.
 # Vista para index
-def index(request):
+def menu(request):
     tipos = Tipos.objects.all()
-    return render(request, "trivago/index.html")
+    return render(request, "trivago/menu.html")
 
 
 # Vistas para tipo de habitaciones
@@ -358,8 +359,91 @@ def consumos(request):
 
 # Vista para restaurante
 def restaurante(request):
-    return render(request, "trivago/restaurante.html")
+    restaurant = Restaurant.objects.all()
+    return render(request, "trivago/reserva_restaurante/restaurante.html", {
+        "restaurant": restaurant
+    })
 
+def agregar_reserva_restaurante(request):
+    huespedes = Huespedes.objects.all()
+
+    if request.method == "POST":
+        id_huesped = request.POST.get("id_huesped")
+        personas = request.POST.get("personas")
+        fecha = request.POST.get("fecha")
+        hora = request.POST.get("hora")
+
+        try:
+            nueva_reserva = Rerestaurantes(
+                id_huesped_id=id_huesped,
+                personas=personas,
+                fecha=fecha,  
+                hora=hora,     
+                activa=1       
+            )
+            nueva_reserva.save()
+
+            nuevo_restaurant = Restaurant(
+                id_restaurant=nueva_reserva,
+                id_staff=None  # aún no hay staff asignado
+            )
+            nuevo_restaurant.save()
+            messages.success(request, "Reserva creada exitosamente.")
+            return redirect("restaurante")
+
+        except Exception as e:
+            messages.error(request, f"No se pudo crear la reserva: {e}")
+
+    return render(request, "trivago/reserva_restaurante/agregar_reserva_restaurante.html", {
+        "huespedes": huespedes,
+        "today": timezone.now().date()
+    })
+
+
+def editar_reserva_restaurante(request, id):
+    restaurant = get_object_or_404(Restaurant, pk=id)
+    staff = Staffs.objects.filter(area_trabajo='Mesero')
+    reserva = get_object_or_404(Rerestaurantes, pk=restaurant.id_restaurant_id)
+
+    if request.method == "POST":
+        try:
+            id_staff = request.POST.get("id_staff")
+            activa = request.POST.get("activa")
+
+            if id_staff:
+                restaurant.id_staff_id = id_staff 
+            restaurant.save()
+
+            if activa is not None:
+                reserva.activa = int(activa)
+                reserva.save()
+
+            messages.success(request, "Reserva actualizada exitosamente.")
+            return redirect('restaurante')
+
+        except Exception as e:
+            messages.error(request, f"Error al actualizar la reserva: {e}")
+    return render(request, "trivago/reserva_restaurante/editar_reserva_restaurante.html", {
+        "restaurant": restaurant,
+        "staff": staff,
+        "reserva": reserva,
+    })
+
+def eliminar_reserva_restaurante(request, id):
+    restaurant = get_object_or_404(Restaurant, pk=id)
+    if request.method == "POST":
+        try:
+            reserva = restaurant.id_restaurant  
+            if reserva:
+                reserva.delete()
+            restaurant.delete()
+            messages.success(request, "Reserva eliminada exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar la reserva: {e}")
+
+        return redirect("restaurante")
+    else:
+        return redirect("restaurante")
 
 # Vistas para productos
 def productos(request):
