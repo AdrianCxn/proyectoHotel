@@ -286,12 +286,22 @@ def huespedes(request):
 
 
 def eliminar_huesped(request, id):
-    huespedes = get_object_or_404(Huespedes, pk=id)
+    huesped = get_object_or_404(Huespedes, pk=id)
 
     if request.method == "POST":
         try:
-            huespedes.delete()
-            messages.success(request, "Huesped eliminado exitosamente.")
+            # Buscar y eliminar el usuario vinculado
+            from portalHuesped.models import HuespedCuenta
+            try:
+                cuenta = HuespedCuenta.objects.get(huesped=huesped)
+                user = cuenta.user
+                cuenta.delete()
+                user.delete()
+            except HuespedCuenta.DoesNotExist:
+                user = None
+            Reservas.objects.filter(id_huesped=huesped).delete()
+            huesped.delete()
+            messages.success(request, "Huesped y usuario eliminados exitosamente.")
         except Exception as e:
             messages.error(request, f"Error al eliminar la cuenta del huesped: {e}")
         return redirect('huespedes')
@@ -364,6 +374,7 @@ def restaurante(request):
         "restaurant": restaurant
     })
 
+
 def agregar_reserva_restaurante(request):
     huespedes = Huespedes.objects.all()
 
@@ -429,6 +440,7 @@ def editar_reserva_restaurante(request, id):
         "reserva": reserva,
     })
 
+
 def eliminar_reserva_restaurante(request, id):
     restaurant = get_object_or_404(Restaurant, pk=id)
     if request.method == "POST":
@@ -444,6 +456,7 @@ def eliminar_reserva_restaurante(request, id):
         return redirect("restaurante")
     else:
         return redirect("restaurante")
+
 
 # Vistas para productos
 def productos(request):

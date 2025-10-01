@@ -49,7 +49,6 @@ def registro(request):
             telefono=telefono,
             email=email,
             edad=edad,
-            id_reserva = None
         )
 
         # Eto e' para crear el usuario con nombre y apellido porque no se guarda automaticamente
@@ -94,7 +93,13 @@ def logout_huesped(request):
 
 @login_required
 def huesped_dashboard(request):
-    cuenta = request.user.huesped_cuenta
+    try:
+        cuenta = request.user.huesped_cuenta
+    except Exception:
+        # Si el usuario no tiene cuenta de huésped, cerrar sesión y redirigir al login
+        logout(request)
+        messages.error(request, "Tu cuenta ha sido eliminada. Inicia sesión nuevamente o contacta al administrador.")
+        return redirect('login_huesped')
     reservas = Reservas.objects.filter(id_huesped=cuenta.huesped.id_huesped).distinct()
     sin_reserva = not reservas.exists()
     return render(request, 'portalHuesped/dashboard.html', {
