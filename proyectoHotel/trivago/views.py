@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos
+from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos
 
 # Create your views here.
 # Vista para index
@@ -136,7 +136,7 @@ def eliminar_staff(request, id):
 
 def descuentos(request):
     descuentos = Descuentos.objects.all()
-    return render(request, "trivago/descuentos.html", {
+    return render(request, "trivago/descuentos/descuentos.html", {
         "descuentos": descuentos
     })
 
@@ -161,7 +161,7 @@ def agregar_descuento(request):
         except Exception as e:
             messages.error(request, f"Error al agregar el descuento: {e}")
 
-    return render(request, "trivago/agregar_descuento.html")
+    return render(request, "trivago/descuentos/agregar_descuento.html")
 
 def editar_descuento(request, id):
     descuento = get_object_or_404(Descuentos, pk=id)
@@ -180,7 +180,7 @@ def editar_descuento(request, id):
         except Exception as e:
             messages.error(request, f"Error al actualizar el descuento: {e}")
 
-    return render(request, "trivago/editar_descuento.html", {
+    return render(request, "trivago/descuentos/editar_descuento.html", {
         "descuento": descuento
     })
 
@@ -225,7 +225,77 @@ def restaurante(request):
 
 # Vistas para productos
 def productos(request):
-    return render(request, "trivago/productos.html")
+    productos = Productos.objects.all()
+    return render(request, "trivago/productos/productos.html", {
+        "productos": productos
+    })
+
+def agregar_producto(request):
+    productos = Productos.objects.all()
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        marca = request.POST.get("marca")
+        costo = request.POST.get("costo")
+
+        try:
+            nuevo_producto = Productos(
+                nombre=nombre,
+                marca=marca,
+                costo=costo
+            )
+            nuevo_producto.save()
+            messages.success(request, "Producto agregado exitosamente.")
+            return redirect('productos') 
+        except IntegrityError:
+            messages.error(request, "Error: Ya existe ese producto.")
+        except Exception as e:
+            messages.error(request, f"Error al agregar nuevo producto: {e}")
+
+    return render(request, "trivago/productos/agregar_producto.html")
+
+def editar_producto(request, id):
+    producto = get_object_or_404(Productos, pk=id)
+
+    if request.method == "POST":
+        producto.nombre = request.POST.get('nombre')
+        producto.marca = request.POST.get('marca')
+        producto.costo = request.POST.get('costo')
+
+        try:
+            producto.save()
+            messages.success(request, "Producto actualizado exitosamente.")
+            return redirect('productos')  # redirige a la lista de descuentos
+        except IntegrityError:
+            messages.error(request, "Error: Ya existe un producto con estos datos.")
+        except Exception as e:
+            messages.error(request, f"Error al actualizar el producto: {e}")
+
+    return render(request, "trivago/productos/editar_producto.html", {
+        "producto": producto
+    })
+
+def eliminar_producto(request, id):
+    productos = get_object_or_404(Productos, pk=id)
+
+    if request.method == "POST":
+        try:
+            productos.delete()
+            messages.success(request, "Producto eliminado exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar el producto: {e}")
+        return redirect("productos")
+    else:
+        return redirect("productos")
+
+
+
+
+
+
+
+
+
+
 
 
 def inventario(request):

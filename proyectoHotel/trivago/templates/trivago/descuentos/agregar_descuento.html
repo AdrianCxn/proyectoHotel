@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{% static 'trivago/rest_style.css' %}">
-	<title>Editar | Habitaciones</title>
+	<title>Agregar | Descuento</title>
 </head>
 
 <style>
@@ -35,19 +35,19 @@
 
 	.container {
 		padding: 30px 40px;
-		width: 400px;
+		width: 300px;
 		background-color: #fff;
 	}
 
 	.container h1 {
-		font-size: 30px;
+		font-size: 25px;
 		letter-spacing: 0px;
 		font-weight: 700;
 		text-align: center;
 		color: rgb(10, 15, 60);
 		position: relative;
 		text-transform: uppercase;
-		margin-bottom: 30px;
+		margin-bottom: 40px;
 	}
 
 	input {
@@ -72,24 +72,13 @@
 		color: rgb(21, 43, 84);
 	}
 
-	.select-actions {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between; /* los separa uniformemente */
-    margin-bottom: 20px;
-}
-
-.select-actions .mb-3 {
-    flex: 1; /* que cada select ocupe la mitad del contenedor */
-}
-
 	select {
 		width: 100%;
 		padding: 8px;
 		border: 1px solid rgb(36, 44, 112);
 		border-radius: 5px;
 		background-color: #f1f1f1;
-		margin-bottom: 10px;
+		margin-bottom: 30px;
 		font-size: 15px;
 	}
 
@@ -143,9 +132,10 @@
 		<div class="preload-wave"></div>
 	</div>
 
+
 	<div class="main-container">
 		<div class="container">
-			<h1>Editar descuento {{ descuento.id_descuento }}</h1>
+			<h1>Agregar descuento</h1>
 			<form method="POST" class="mb-4">
 				{% csrf_token %}
 				<div class="mb-3">
@@ -154,7 +144,7 @@
 						class="form-control" required>
 				</div>
 
-				<div class="mb-3">
+                <div class="mb-3">
 					<label class="form-label">Fecha fin</label>
 					<input type="date" name="fecha_fin" value="{{ descuento.fecha_fin|date:'Y-m-d' }}"
 						class="form-control" required>
@@ -165,14 +155,19 @@
 					<input type="number" name="descuento" max="0.99" min="0.01" step="0.01" value="{{ descuento.descuento }}"
 	                class="form-control" required>
 				</div>
+
+
 				<div class="form-actions">
 					<a href="{% url 'descuentos' %}" class="btn btn-secondary">Cancelar</a>
-					<button type="submit" class="btn btn-primary">Aplicar cambios</button>
+					<button type="submit" class="btn btn-primary">Agregar</button>
 				</div>
+
 			</form>
 		</div>
 		<div class="image">
-			<img src="https://www.zeysey.com/storage/image/project/01HT8QFH9KK6RK1J3Q6GKPD5VM.jpg" alt="Titulo">
+			<img src="https://thinkandsell.com/wp-content/uploads/2013/11/descuentos.gif" alt="Titulo">
 		</div>
 	</div>
+
+
 </html>
