@@ -80,7 +80,8 @@ DATABASES = {
         'NAME': 'hotel_final',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'admin',
+        'PASSWORD': 'bahreindb123',
+        'PORT': '3306',
     }
 }
 
@@ -125,3 +126,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = '/huesped/login/'

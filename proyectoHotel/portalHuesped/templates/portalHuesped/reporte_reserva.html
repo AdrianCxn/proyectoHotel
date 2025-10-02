@@ -4,65 +4,121 @@
 <head>
   <meta charset="UTF-8">
   <title>Reporte Reserva #{{ reserva.id_reserva }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{% static 'portalHuesped/styles.css' %}" rel="stylesheet">
 </head>
-<body class="container py-4">
-  <a href="{% url 'huesped_dashboard' %}" class="btn btn-link">&larr; Volver</a>
-  <h1>Reporte de Reserva #{{ reserva.id_reserva }}</h1>
-  <div class="row mt-3">
-    <div class="col-md-6">
-      <h5>Detalles</h5>
-      <ul class="list-group">
-        <li class="list-group-item"><strong>Habitación:</strong> {{ reserva.id_habitacion.numero }}</li>
-        <li class="list-group-item"><strong>Llegada:</strong> {{ reserva.fecha_llegada }}</li>
-        <li class="list-group-item"><strong>Salida:</strong> {{ reserva.fecha_salida }}</li>
-        <li class="list-group-item"><strong>Adultos:</strong> {{ reserva.cantidad_a }}</li>
-        <li class="list-group-item"><strong>Niños:</strong> {{ reserva.cantidad_n }}</li>
-        <li class="list-group-item"><strong>Estado:</strong> {% if reserva.activa %}Activa{% else %}Cerrada{% endif %}</li>
-      </ul>
+<body>
+  <div class="main-container">
+    <div class="mb-4">
+      <a href="{% url 'huesped_dashboard' %}" class="btn btn-primary">&larr; Volver al Dashboard</a>
     </div>
-    <div class="col-md-6">
-      <h5>Cuenta</h5>
-      {% if cuenta_reserva %}
-      <ul class="list-group">
-        <li class="list-group-item"><strong>Noches:</strong> {{ cuenta_reserva.noches }}</li>
-        <li class="list-group-item"><strong>Total (Base):</strong> $ {{ cuenta_reserva.total }}</li>
-      </ul>
+    <h1 style="text-align: center; margin-bottom: 30px;">Reporte de Reserva #{{ reserva.id_reserva }}</h1>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h4 style="color: #350d67; margin-bottom: 20px;">Detalles de la Reserva</h4>
+            <ul class="list-group list-group-flush" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+              <li class="list-group-item"><strong>Habitación:</strong> {{ reserva.id_habitacion.numero }}</li>
+              <li class="list-group-item"><strong>Llegada:</strong> {{ reserva.fecha_llegada }}</li>
+              <li class="list-group-item"><strong>Salida:</strong> {{ reserva.fecha_salida }}</li>
+              <li class="list-group-item"><strong>Adultos:</strong> {{ reserva.cantidad_a }}</li>
+              <li class="list-group-item"><strong>Niños:</strong> {{ reserva.cantidad_n }}</li>
+              <li class="list-group-item"><strong>Estado:</strong> 
+                <span class="{% if reserva.activa %}text-success{% else %}text-secondary{% endif %}">
+                  {% if reserva.activa %}Activa{% else %}❌ Cerrada{% endif %}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h4 style="color: #350d67; margin-bottom: 20px;">Información de Cuenta</h4>
+            {% if cuenta_reserva %}
+            <ul class="list-group list-group-flush" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+              <li class="list-group-item"><strong>Noches:</strong> {{ cuenta_reserva.noches }}</li>
+              <li class="list-group-item"><strong>Total (Base):</strong> ${{ cuenta_reserva.total }}</li>
+            </ul>
+            {% else %}
+              <div class="alert alert-info" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                <i>No hay datos de cuenta disponibles.</i>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4">
+      <h4 style="color: #350d67; margin-bottom: 20px; text-align: center;">Consumos Durante la Estancia</h4>
+      {% if consumos %}
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Costo Unitario</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in consumos %}
+              <tr>
+                <td>{{ c.id_producto.nombre }}</td>
+                <td style="text-align: center;">{{ c.cantidad }}</td>
+                <td>${{ c.id_producto.costo }}</td>
+                <td class="subtotal" style="font-weight: bold;">$<span data-cantidad="{{ c.cantidad }}" data-costo="{{ c.id_producto.costo }}"></span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="card mt-4" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+          <div class="card-body">
+            <div class="row text-center">
+              <div class="col-md-6">
+                <h5 style="color: #350d67;">Total Consumos</h5>
+                <p style="font-size: 1.5rem; font-weight: bold; color: #689f38;">${{ total_consumos }}</p>
+              </div>
+              {% if cuenta_reserva %}
+              <div class="col-md-6">
+                <h5 style="color: #350d67;">Total General</h5>
+                <p style="font-size: 1.5rem; font-weight: bold; color: #d32f2f;">${{ cuenta_reserva.total|default:0|add:total_consumos }}</p>
+                <small style="color: #6c757d;">(Hospedaje + Consumos)</small>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
       {% else %}
-        <p>No hay datos de cuenta disponibles.</p>
+        <div class="alert alert-info text-center">
+          <h5>🍽️ Sin Consumos</h5>
+          <p style="margin: 0; font-style: italic;">No hay consumos registrados durante esta estancia.</p>
+        </div>
       {% endif %}
     </div>
+    
+    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(215, 177, 130, 0.3);">
+      <p style="font-style: italic; color: #6d4c41; font-size: 0.9rem;">Hotel Irisvago</p>
+    </div>
   </div>
-  <div class="mt-4">
-    <h5>Consumos</h5>
-    {% if consumos %}
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Costo Unitario</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for c in consumos %}
-          <tr>
-            <td>{{ c.id_producto.nombre }}</td>
-            <td>{{ c.cantidad }}</td>
-            <td>$ {{ c.id_producto.costo }}</td>
-            <td>$ {{ c.id_producto.costo|floatformat:2|add:'0'|floatformat:2 }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <p><strong>Total consumos:</strong> $ {{ total_consumos }}</p>
-      {% if cuenta_reserva %}
-        <p><strong>Total General (Base + Consumos):</strong> $ {{ cuenta_reserva.total|default:0|add:total_consumos }}</p>
-      {% endif %}
-    {% else %}
-      <p>No hay consumos registrados.</p>
-    {% endif %}
-  </div>
+
+  <script>
+    // Calcular subtotales correctamente
+    document.addEventListener('DOMContentLoaded', function() {
+      const subtotalElements = document.querySelectorAll('.subtotal span');
+      subtotalElements.forEach(function(element) {
+        const cantidad = parseFloat(element.dataset.cantidad);
+        const costo = parseFloat(element.dataset.costo);
+        const subtotal = (cantidad * costo).toFixed(2);
+        element.textContent = subtotal;
+      });
+    });
+  </script>
 </body>
 </html>

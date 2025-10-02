@@ -4,51 +4,89 @@
 <head>
   <meta charset="UTF-8">
   <title>Mi Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{% static 'portalHuesped/styles.css' %}" rel="stylesheet">
 </head>
-<body class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Hola, {{ request.user.first_name }} {{ request.user.last_name }}</h1>
-    <div>
-      <a href="{% url 'crear_reserva' %}" class="btn btn-success me-2">Crear Reserva</a>
-      <a href="{% url 'logout_huesped' %}" class="btn btn-outline-danger">Cerrar Sesión</a>
+<body>
+  <div class="main-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Hola, {{ request.user.first_name }} {{ request.user.last_name }}</h1>
+      <div>
+        <a href="{% url 'crear_reserva' %}" class="btn btn-success me-2" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Reserva</a>
+        <a href="{% url 'comprar' %}" class="btn btn-primary me-2">Comprar Productos</a>
+        <a href="{% url 'crear_reserva_restaurante' %}" class="btn btn-primary me-2">Reserva en Restaurante</a>
+        <a href="{% url 'logout_huesped' %}" class="btn btn-outline-danger">Cerrar Sesión</a>
+      </div>
+    </div>
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    <h4>Mis Reservas</h4>
+    {% if reservas %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Habitación</th>
+            <th>Llegada</th>
+            <th>Salida</th>
+            <th>Adultos</th>
+            <th>Niños</th>
+            <th>Estado</th>
+            <th>Reporte</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in reservas %}
+          <tr>
+            <td>{{ r.id_reserva }}</td>
+            <td>{{ r.id_habitacion.numero }}</td>
+            <td>{{ r.fecha_llegada }}</td>
+            <td>{{ r.fecha_salida }}</td>
+            <td>{{ r.cantidad_a }}</td>
+            <td>{{ r.cantidad_n }}</td>
+            <td>{% if r.activa %}Activa{% else %}Cerrada{% endif %}</td>
+            <td><a class="btn btn-sm btn-primary" href="{% url 'reporte_reserva' r.id_reserva %}">Ver</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="alert alert-info">Aún no tienes reservas. Crea una nueva para comenzar tu estancia.</div>
+    {% endif %}
+
+    <h4 class="mt-4">Mis Reservas de Restaurante</h4>
+    {% if reservas_restaurante %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Personas</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rr in reservas_restaurante %}
+          <tr>
+            <td>{{ rr.id_restaurant }}</td>
+            <td>{{ rr.fecha }}</td>
+            <td>{{ rr.hora }}</td>
+            <td>{{ rr.personas }}</td>
+            <td>{% if rr.activa %}Activa{% else %}Cerrada{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="alert alert-info">Aún no tienes reservas de restaurante. Haz una reserva para disfrutar nuestros platillos.</div>
+    {% endif %}
+    
+    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(215, 177, 130, 0.3);">
+      <p style="font-style: italic; color: #6d4c41; font-size: 0.9rem;"><b>Hotel Irisvago</b> | Creado con ❤  por el equipo 5</p>
     </div>
   </div>
-  {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-  {% endfor %}
-  <h4>Mis Reservas</h4>
-  {% if reservas %}
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Habitación</th>
-          <th>Llegada</th>
-          <th>Salida</th>
-          <th>Adultos</th>
-          <th>Niños</th>
-          <th>Estado</th>
-          <th>Reporte</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in reservas %}
-        <tr>
-          <td>{{ r.id_reserva }}</td>
-          <td>{{ r.id_habitacion.numero }}</td>
-          <td>{{ r.fecha_llegada }}</td>
-          <td>{{ r.fecha_salida }}</td>
-          <td>{{ r.cantidad_a }}</td>
-          <td>{{ r.cantidad_n }}</td>
-          <td>{% if r.activa %}Activa{% else %}Cerrada{% endif %}</td>
-          <td><a class="btn btn-sm btn-primary" href="{% url 'reporte_reserva' r.id_reserva %}">Ver</a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <div class="alert alert-info">Aún no tienes reservas. Crea una nueva para comenzar tu estancia.</div>
-  {% endif %}
 </body>
 </html>

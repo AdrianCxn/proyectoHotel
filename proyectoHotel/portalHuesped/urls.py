@@ -9,4 +9,7 @@ urlpatterns = [
     path('dashboard/', views.huesped_dashboard, name='huesped_dashboard'),
     path('reserva/<int:id_reserva>/reporte/', views.reporte_reserva, name='reporte_reserva'),
     path('reservas/crear/', views.crear_reserva, name='crear_reserva'),
+    path('reservas/crear_reserva_restaurante/', views.crear_reserva_restaurante, name='crear_reserva_restaurante'),
+    path('comprar/', views.comprar, name='comprar'),
+    path('comprar/<int:producto_id>/', views.comprar_producto, name='comprar_producto')
 ]

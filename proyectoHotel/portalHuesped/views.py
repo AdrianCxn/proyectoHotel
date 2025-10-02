@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from trivago.models import Reservas, Huespedes, Cuentas, Consumos, Habitaciones, Tipos, Descuentos
+from trivago.models import Productos, Rerestaurantes, Reservas, Huespedes, Cuentas, Consumos, Habitaciones, Tipos, Descuentos
 from .models import HuespedCuenta
 
 
@@ -14,9 +14,7 @@ def index(request):
 
 
 def registro(request):
-    """
-    Registro de huésped sin reserva. Se crea usuario y registro en huespedes con ID_RESERVA en NULL.
-    """
+    #Registro de huésped sin reserva. Se crea usuario y registro en huespedes con ID_RESERVA en NULL.
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -65,6 +63,7 @@ def registro(request):
 
     return render(request, 'portalHuesped/registro.html')
 
+
 def login_huesped(request):
     if request.user.is_authenticated:
         return redirect('huesped_dashboard')
@@ -101,11 +100,13 @@ def huesped_dashboard(request):
         messages.error(request, "Tu cuenta ha sido eliminada. Inicia sesión nuevamente o contacta al administrador.")
         return redirect('login_huesped')
     reservas = Reservas.objects.filter(id_huesped=cuenta.huesped.id_huesped).distinct()
+    reservas_restaurante = Rerestaurantes.objects.filter(id_huesped=cuenta.huesped.id_huesped)
     sin_reserva = not reservas.exists()
     return render(request, 'portalHuesped/dashboard.html', {
         'cuenta': cuenta,
         'reservas': reservas,
-        'sin_reserva': sin_reserva
+        'sin_reserva': sin_reserva,
+        'reservas_restaurante': reservas_restaurante,
     })
 
 
@@ -213,6 +214,8 @@ def crear_reserva(request):
             except Descuentos.DoesNotExist:
                 messages.warning(request, 'Descuento no válido o no aplica a las fechas seleccionadas, se ignora.')
 
+        noches = (fs - fl).days
+
         try:
             reserva = Reservas.objects.create(
                 id_huesped=cuenta.huesped,
@@ -226,7 +229,16 @@ def crear_reserva(request):
                 activa=1,
                 id_descuento=descuento_obj if descuento_obj else None
             )
-            messages.success(request, f'Reserva creada (# {reserva.id_reserva}).')
+            
+            # Crear la cuenta aprovechando el trigger que calcula automáticamente noches y total
+            cuenta_reserva = Cuentas.objects.create(
+                id_reserva=reserva,
+                # Los campos noches y total los calculará automáticamente el trigger
+                noches=0,  # Valor temporal que será actualizado por el trigger
+                total=0.00  # Valor temporal que será actualizado por el trigger
+            )
+
+            messages.success(request, f'Reserva creada exitosamente (# {reserva.id_reserva}). La cuenta se ha generado automáticamente.')
             return redirect('huesped_dashboard')
         except Exception as e:
             messages.error(request, f'Error al crear la reserva: {e}')
@@ -236,3 +248,121 @@ def crear_reserva(request):
         'tipos': tipos,
         'descuentos': descuentos_filtrados,
     })
+
+
+@login_required
+def crear_reserva_restaurante(request):
+    cuenta = request.user.huesped_cuenta
+    
+    # Generar fechas disponibles (hoy y los próximos 6 días)
+    from datetime import date, timedelta
+    fechas_disponibles = []
+    for i in range(7):
+        fecha = date.today() + timedelta(days=i)
+        fechas_disponibles.append(fecha.strftime('%Y-%m-%d'))
+    
+    # Horas disponibles (de 8:00 a 17:00 cada hora)
+    horas_disponibles = [
+        "8:00", "9:00", "10:00", "11:00", "12:00",
+        "13:00", "14:00", "15:00", "16:00", "17:00", 
+    ]
+    
+    if request.method == 'POST':
+        fecha = request.POST.get('fecha')
+        hora = request.POST.get('hora')
+        personas = request.POST.get('numero_personas')
+
+        # Validar que todos los campos estén completos
+        if not all([fecha, hora, personas]):
+            messages.error(request, 'Todos los campos son obligatorios.')
+            return render(request, 'portalHuesped/crear_reserva_restaurante.html', {
+                'fechas_disponibles': fechas_disponibles,
+                'horas_disponibles': horas_disponibles,
+            })
+
+        # Validar que la fecha no sea anterior a hoy
+        from datetime import datetime
+        fecha_seleccionada = datetime.strptime(fecha, '%Y-%m-%d').date()
+        if fecha_seleccionada < date.today():
+            messages.error(request, 'No puedes reservar una fecha anterior a hoy.')
+            return render(request, 'portalHuesped/crear_reserva_restaurante.html', {
+                'fechas_disponibles': fechas_disponibles,
+                'horas_disponibles': horas_disponibles,
+            })
+
+        try:
+            # Crear la reserva de restaurante
+            from trivago.models import Rerestaurantes
+            reserva_restaurant = Rerestaurantes.objects.create(
+                id_huesped=cuenta.huesped,
+                personas=int(personas),
+                fecha=fecha,
+                hora=hora,
+                activa=1
+            )
+            messages.success(request, f'Reserva de restaurante creada exitosamente para {personas} personas.')
+            return redirect('huesped_dashboard')
+        except Exception as e:
+            messages.error(request, f'Error al crear la reserva de restaurante: {e}')
+
+    return render(request, 'portalHuesped/crear_reserva_restaurante.html', {
+        'fechas_disponibles': fechas_disponibles,
+        'horas_disponibles': horas_disponibles,
+    })
+
+
+@login_required
+def comprar(request):
+    """Vista que solo muestra la lista de productos disponibles"""
+    cuenta = request.user.huesped_cuenta
+    from trivago.models import Productos
+    productos = Productos.objects.all()
+    reservas_activas = Reservas.objects.filter(id_huesped=cuenta.huesped, activa=1)
+
+    return render(request, 'portalHuesped/comprar.html', {
+        'cuenta': cuenta,
+        'productos': productos,
+        'reservas_activas': reservas_activas
+    })
+
+
+@login_required
+def comprar_producto(request, producto_id):
+    """Vista específica para procesar la compra de un producto específico"""
+    cuenta = request.user.huesped_cuenta
+    
+    if request.method == 'POST':
+        cantidad = request.POST.get('cantidad')
+        reserva_id = request.POST.get('reserva_id')
+        
+        if not all([cantidad, reserva_id]):
+            messages.error(request, 'La cantidad y la reserva son obligatorias.')
+            return redirect('comprar')
+            
+        try:
+            cantidad_i = int(cantidad)
+            if cantidad_i <= 0:
+                raise ValueError("La cantidad debe ser un número positivo.")
+            
+            from trivago.models import Productos, Consumos
+            producto = Productos.objects.get(id_producto=producto_id)
+            
+            # Verificar que la reserva pertenece al huésped y está activa
+            reserva = get_object_or_404(Reservas, id_reserva=reserva_id, id_huesped=cuenta.huesped, activa=1)
+            
+            Consumos.objects.create(
+                id_reserva=reserva,
+                id_producto=producto,
+                cantidad=cantidad_i
+            )
+            
+            messages.success(request, f'Se agregó {cantidad_i} unidades de {producto.nombre} a tu consumo.')
+            
+        except Productos.DoesNotExist:
+            messages.error(request, 'El producto seleccionado no existe.')
+        except ValueError as ve:
+            messages.error(request, f'Error en la cantidad: {ve}')
+        except Exception as e:
+            messages.error(request, f'Error al procesar la compra: {e}')
+    
+    return redirect('comprar')
