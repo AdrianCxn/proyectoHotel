@@ -20,6 +20,15 @@
 
     {% include 'trivago/index.html' %} 
 
+
+    {% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+				<div class="alert alert-info">{{ message }}</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+    
     <div class="image">
 		<img src="https://remindshospitality.com/wp-content/uploads/2021/10/shutterstock_1566785659-1.jpg" alt="Titulo">
 		<h1 class="titulo2">Reservas</h1>

@@ -48,13 +48,17 @@ ul {
 }
 
 .IRISVAGO h1 {
-  padding: 5px;
   font-size: 40px;
   font-weight: bold;
   color: bisque;
   text-decoration: line-through  rgb(61, 70, 197);
   font-family: 'Times New Roman', Times, serif;
   margin-right: 10px;
+  text-align: center;
+}
+
+.IRISVAGO a{
+  text-decoration: none;
 }
 
 ul li a {
@@ -73,13 +77,13 @@ li a, .dropbtn {
   text-decoration: none;
 }
 
-li a:hover, .dropdown:hover .dropbtn {
+.dropdown li a:hover, .dropdown:hover .dropbtn {
   background-color: rgb(61, 63, 61);
   text-decoration: none;
   color: #000000;
 }
 
-li.dropdown {
+.dropdown li {
   display: inline-block;
 }
 
