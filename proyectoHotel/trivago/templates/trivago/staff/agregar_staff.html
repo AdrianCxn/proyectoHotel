@@ -162,7 +162,7 @@
 
                 <div class="mb-3">
 					<label class="form-label">Teléfono</label>
-					<input type="text" name="telefono" maxlength="100" required>
+					<input type="text" name="telefono" maxlength="20" pattern="[0-9]+" required>
 				</div>
 
 				<div class="mb-3">
@@ -172,7 +172,7 @@
 
 				<div class="mb-3">
 					<label class="form-label">Edad</label>
-					<input type="number" name="edad" maxlength="15" pattern="[0-9]+" required>
+					<input type="number" name="edad" min="18" max="130" pattern="[0-9]+" required>
 				</div>
 
                 <div class="mb-3">
@@ -182,7 +182,7 @@
 
                 <div class="mb-3">
 					<label class="form-label">Salario</label>
-					<input type="text" name="salario" maxlength="100" required>
+					<input type="text" name="salario" maxlength="10" pattern="\$?[0-9]+(\.[0-9]{2})?" required>
 				</div>
 
                 <div class="mb-3">

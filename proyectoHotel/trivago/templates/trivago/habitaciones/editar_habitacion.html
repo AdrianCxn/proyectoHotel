@@ -158,13 +158,13 @@
 				{% csrf_token %}
 				<div class="mb-3">
 					<label class="form-label">Número de habitación</label>
-					<input type="text" name="numero" maxlength="4" pattern="[0-9]+" value="{{ habitacion.numero }}"
+					<input type="number" name="numero" min="1" max="99" value="{{ habitacion.numero }}"
 						class="form-control" placeholder="Ej. 101" required>
 				</div>
 
 				<div class="mb-3">
 					<label class="form-label">Piso</label>
-					<input type="text" name="piso" maxlength="2" pattern="[0-9]+" class="form-control"
+					<input type="number" name="numero" min="1" max="50" class="form-control"
 						value="{{ habitacion.piso }}" placeholder="Ej. 1" required>
 				</div>
 				<div class="select-actions">
