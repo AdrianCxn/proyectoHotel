@@ -11,37 +11,120 @@
     <link rel="stylesheet" href="{% static 'trivago/rest_style.css' %}">
     <title>Menu Principal</title>
 </head>
+
 <style>
-.pfp { 
-    width: 150px;
-    height: 150px;
-    border-radius: 100%; 
-    overflow: hidden; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-} 
+    .admin-section .text-container {
+        padding: 10px;
+        max-width: 600px;
+        margin: 10px;
+    }
 
-.pfp2 { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-}
+    .admin-section .bienvenida h1 {
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bolder;
+        color: rgb(44, 44, 128);
+        font-size: 60px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
 
+    .admin-section .parrafo p {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 20px;
+    }
+
+    .admin-section .pfp {
+        width: 250px;
+        height: 250px;
+        border-radius: 100%;
+        overflow: hidden;
+        margin-right: 40px;
+        margin-top: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .admin-section .pfp2 {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .admin-section .perfil-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 30px;
+        margin: 10px 20px;
+    }
+
+    .admin-section .opciones2 {
+        display: flex;
+        flex-direction: row; 
+        justify-content: center; 
+        gap: 20px;            
+        flex-wrap: wrap;       
+        margin-top: 20px;
+    }
+
+    .admin-section .opciones2 ul {
+        list-style-type: none;
+        background: -webkit-linear-gradient(#232466, #0b0634);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 110px;
+        min-width: 200px;
+        border-radius: 25px;
+        margin: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
+    }
+
+    .admin-section .opciones2 p {
+        text-align: center;
+        padding: 10px;
+        color: beige;
+        font-size: 25px;
+        font-weight: bolder;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
 </style>
+
 <body>
-    <!-- Menu -->
     <div class="preload">
         <div class="preload-wave"></div>
     </div>
 
     {% include 'trivago/index.html' %}
-    <div class="main-container">
-        <div class="opciones">
-                <div class="pfp">
-                    <img src="https://photos.peopleimages.com/picture/202302/2618651-portrait-business-and-woman-with-arms-crossed-in-office-corporate-company-and-management-in-colombia.-business-executive-mature-female-and-smile-for-leadership-professional-trust-or-vision-of-ceo-fit_400_400.jpg" class="pfp2">
+
+    <div class="main-container admin-section">
+        <div class="perfil-container">
+            <div class="text-container">
+                <div class="bienvenida">
+                    <h1>¡Bienvenid@ Admin!</h1>
                 </div>
+                <div class="parrafo">
+                    <p>
+                        Con este portal se tendrá acceso a las tablas con todos los registros del hotel Irisvago, como
+                        staff, consumos, reservaciones, huéspedes, entre otros. Algunas tablas cuentan con la opción de
+                        editar o eliminar filas, agregar otra desde cero o solo ver registros.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pfp">
+                <img src="https://photos.peopleimages.com/picture/202302/2618651-portrait-business-and-woman-with-arms-crossed-in-office-corporate-company-and-management-in-colombia.-business-executive-mature-female-and-smile-for-leadership-professional-trust-or-vision-of-ceo-fit_400_400.jpg"
+                     class="pfp2">
+            </div>
+        </div>
+
+        <div class="opciones2">
+            <ul><p>Actualmente hospedados</p></ul>
+            <ul><p>Estadísticas</p></ul>
+            <ul><p>Chats</p></ul>
+            <ul><p>Ventas totales</p></ul>
         </div>
     </div>
 </body>
+
 </html>
