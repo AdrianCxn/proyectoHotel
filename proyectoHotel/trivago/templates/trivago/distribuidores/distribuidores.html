@@ -20,6 +20,14 @@
 
     {% include 'trivago/index.html' %}
 
+    {% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+				<div class="alert alert-info">{{ message }}</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
     <div class="image">
         <img src="https://news.sap.com/latinamerica/files/2021/02/23/Untitled-design-49.png" alt="Titulo">
         <h1 class="titulo2">Distribuidores</h1>

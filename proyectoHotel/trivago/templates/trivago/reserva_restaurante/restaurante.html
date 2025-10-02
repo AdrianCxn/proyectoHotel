@@ -20,6 +20,14 @@
 
     {% include 'trivago/index.html' %}
 
+    {% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+				<div class="alert alert-info">{{ message }}</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
     <div class="image">
 		<img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/51/77/a2/intro-restaurant-plaza.jpg?w=1800&h=1000&s=1"alt="Titulo">
 		<h1 class="titulo2"><i>Il Ristorante</i></h1>

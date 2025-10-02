@@ -20,6 +20,15 @@
 
 	{% include 'trivago/index.html' %}
 
+
+	{% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+				<div class="alert alert-info">{{ message }}</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
 	<div class="image">
 		<img src="https://www.oracle.com/a/ocom/img/rc24-bsa-what-is-inventory-management.jpg" alt="Titulo">
 		<h1 class="titulo2">Inventario</h1>

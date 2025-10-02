@@ -20,6 +20,14 @@
 
 	{% include 'trivago/index.html' %}
 
+	{% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+				<div class="alert alert-info">{{ message }}</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
 	<div class="image">
 		<img src="https://preview.redd.it/special-soda-shelf-in-finland-anything-special-v0-7fhy1r5kbukf1.jpeg?width=1080&crop=smart&auto=webp&s=2533d1d9c35364dd14b1ec70cec37c55f2cde90e" alt="Titulo">
 		<h1 class="titulo2">Consumos</h1>

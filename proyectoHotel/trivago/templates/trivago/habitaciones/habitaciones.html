@@ -20,6 +20,14 @@
 
 	{% include 'trivago/index.html' %}
 
+	{% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+				<div class="alert alert-info">{{ message }}</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
 	<div class="image">
 		<img src="https://www.zeysey.com/storage/image/project/01HT8QFH9KK6RK1J3Q6GKPD5VM.jpg" alt="Titulo">
 		<h1 class="titulo2">Habitaciones</h1>
