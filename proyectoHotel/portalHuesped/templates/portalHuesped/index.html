@@ -2,30 +2,112 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <link rel="stylesheet" href="{% static 'trivago/styles.css' %}">
     <title>Portal Huésped</title>
 </head>
-<body class="container py-5">
-    <h1 class="mb-4">Portal de Huésped</h1>
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
 
-    {% if user.is_authenticated %}
-        <p>Has iniciado sesión como <strong>{{ user.username }}</strong>.</p>
-        <a class="btn btn-primary" href="{% url 'huesped_dashboard' %}">Ir a mi Panel</a>
-        <a class="btn btn-outline-danger" href="{% url 'logout_huesped' %}">Cerrar Sesión</a>
-    {% else %}
-        <p>Bienvenido al portal de huéspedes Irisvago.</p>
-        <p>Accede a tus reservas ingresando con tu cuenta o crea una nueva si ya eres huésped registrado en el hotel.</p>
-        <a class="btn btn-success" href="{% url 'login_huesped' %}">Iniciar Sesión</a>
-        <a class="btn btn-secondary" href="{% url 'registro_huesped' %}">Registrarme</a>
-    {% endif %}
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        display: flex;
+        min-height: 100vh;
+        padding: 50px 15px;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, rgb(80, 16, 101) 0%, rgb(44, 10, 60) 55%);
+        box-sizing: border-box;
+    }
 
+    .main-container {
+        max-width: 350px;
+        max-height: 500px;
+        background-color: #fff;
+        overflow: hidden;
+        padding: 30px 10px;
+    }
+
+    .container h1 {
+        font-size: 25px;
+        letter-spacing: 0px;
+        font-weight: bolder;
+        text-align: center;
+        color: rgb(81, 22, 108);
+        text-transform: uppercase;
+        padding-top: 10px;
+        margin-bottom: 30px; 
+    }
+
+    .main-page{
+        padding-right: 20px;
+        padding-left: 20px;
+        text-align: center;
+    }
+
+    .main-page p {
+        font-size: 15px;
+        letter-spacing: 0px;
+        text-align: center;
+        color: rgb(0, 0, 0);
+        position: relative;
+        margin: 5px 0; 
+        margin-bottom: 20px;
+    }
+
+    .main-page a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(113, 54, 168);
+        color: #fff;
+        border: none;
+        font-size: 15px;
+        padding: 12px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.5s;
+        text-decoration: none;
+        margin: 8px;
+        margin-bottom: 20px;
+    }
+
+    .main-page a:hover {
+        background-color: rgb(42, 3, 78);
+        opacity: 0.8;
+    }
+
+</style>
+
+<body>
+
+    <div class="main-container">
+        <div class="container">
+            <h1>Portal de Huésped</h1>
+        </div>
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+        <div class="autenticar">
+            <p>Has iniciado sesión como <strong>{{ user.username }}</strong>.</p>
+            <a class="btn btn-primary" href="{% url 'huesped_dashboard' %}">Ir a mi Panel</a>
+            <a class="btn btn-outline-danger" href="{% url 'logout_huesped' %}">Cerrar Sesión</a>
+        </div>
+
+        {% else %}
+        <div class="main-page">
+            <p><b>Bienvenido al portal de huéspedes Irisvago.</b></p>
+            <p>Accede a tus reservas ingresando con tu cuenta o crea una nueva si ya eres huésped registrado en el hotel.</p>
+            <a class="btn btn-success" href="{% url 'login_huesped' %}">Iniciar Sesión</a>
+            <a class="btn btn-secondary" href="{% url 'registro_huesped' %}">Registrarme</a>
+        </div>
+
+        {% endif %}
+    </div>
 </body>
+
 </html>

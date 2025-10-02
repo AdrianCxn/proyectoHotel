@@ -1,5 +1,5 @@
-from django.urls import path
 from . import views
+from django.urls import include, path
 
 urlpatterns = [
     path('', views.menu, name='menu'),
@@ -53,7 +53,9 @@ urlpatterns = [
     path('editar_reserva/<int:id>/', views.editar_reserva, name='editar_reserva'),
     path('eliminar_reserva/<int:id>/', views.eliminar_reserva, name='eliminar_reserva'),
 
+    # Path para consumos
     path('consumos/', views.consumos, name='consumos'),
+    path('eliminar_consumos/<int:id>/', views.eliminar_consumos, name='eliminar_consumos'),
 
     # Path para restaurante
     path('restaurante/', views.restaurante, name='restaurante'),

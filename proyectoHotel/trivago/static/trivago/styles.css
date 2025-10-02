@@ -21,9 +21,30 @@ ul {
     margin-left: 10px;
 }
 
-.opciones2 {
+.btn2 {
     display: flex;
     float: right;
+    font-size: 14px;
+    
+}
+
+.btn2 li{
+  margin: 10px;
+  background-color: bisque;
+  border-radius: 15px;
+
+}
+
+.btn2 li a:hover{
+  background-color: rgb(106, 115, 176);
+  text-decoration: none;
+  border-radius: 15px;
+  color: #000000;
+  cursor: pointer;
+}
+
+.btn2 li a{
+  color: #000000;
 }
 
 .IRISVAGO h1 {
@@ -54,6 +75,8 @@ li a, .dropbtn {
 
 li a:hover, .dropdown:hover .dropbtn {
   background-color: rgb(61, 63, 61);
+  text-decoration: none;
+  color: #000000;
 }
 
 li.dropdown {
@@ -63,7 +86,7 @@ li.dropdown {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -79,6 +102,8 @@ li.dropdown {
 
 .dropdown-content a:hover {
     background-color: #dcdada;
+    text-decoration: none;
+    color: #000000;
 }
 
 .dropdown:hover .dropdown-content {

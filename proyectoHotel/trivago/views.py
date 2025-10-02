@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.utils import timezone
 from datetime import datetime
-from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos, Distribuidores, Inventarios, Rerestaurantes, Restaurant
+from .models import Habitaciones, Huespedes, Reservas, Staffs, Tipos, Descuentos, Productos, Distribuidores, Inventarios, Rerestaurantes, Restaurant, Consumos
 
 # Vista para index
 def menu(request):
@@ -364,7 +364,23 @@ def eliminar_reserva(request, id):
 
 # Vista para consumos
 def consumos(request):
-    return render(request, "trivago/consumos.html")
+    consumos = Consumos.objects.all()
+    return render(request, "trivago/consumos/consumos.html", {
+        "consumos": consumos
+    })
+
+def eliminar_consumos(request, id):
+    consumo = get_object_or_404(Consumos, pk=id)
+
+    if request.method == "POST":
+        try:
+            consumo.delete()
+            messages.success(request, "Registro de consumos eliminado exitosamente.")
+        except Exception as e:
+            messages.error(request, f"Error al eliminar el registro: {e}")
+        return redirect("consumos")
+    else:
+        return redirect("consumos")
 
 
 # Vista para restaurante
