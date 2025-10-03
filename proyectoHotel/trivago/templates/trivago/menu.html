@@ -14,9 +14,8 @@
 
 <style>
     .admin-section .text-container {
-        padding: 10px;
-        max-width: 600px;
-        margin: 10px;
+        max-width: auto;
+        gap: 30px;
     }
 
     .admin-section .bienvenida h1 {
@@ -34,13 +33,15 @@
     }
 
     .admin-section .pfp {
-        width: 250px;
+        width: 550px;
         height: 250px;
         border-radius: 100%;
         overflow: hidden;
-        margin-right: 40px;
+        margin-right: 20px;
         margin-top: 20px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        object-fit: cover;
+        display: block;
     }
 
     .admin-section .pfp2 {
@@ -99,6 +100,9 @@
 
     <div class="main-container admin-section">
         <div class="perfil-container">
+            <div class="pfp">
+                <img src="https://photos.peopleimages.com/picture/202302/2618651-portrait-business-and-woman-with-arms-crossed-in-office-corporate-company-and-management-in-colombia.-business-executive-mature-female-and-smile-for-leadership-professional-trust-or-vision-of-ceo-fit_400_400.jpg" class="pfp2">
+            </div>
             <div class="text-container">
                 <div class="bienvenida">
                     <h1>¡Bienvenid@ Admin!</h1>
@@ -111,18 +115,6 @@
                     </p>
                 </div>
             </div>
-
-            <div class="pfp">
-                <img src="https://photos.peopleimages.com/picture/202302/2618651-portrait-business-and-woman-with-arms-crossed-in-office-corporate-company-and-management-in-colombia.-business-executive-mature-female-and-smile-for-leadership-professional-trust-or-vision-of-ceo-fit_400_400.jpg"
-                     class="pfp2">
-            </div>
-        </div>
-
-        <div class="opciones2">
-            <ul><p>Actualmente hospedados</p></ul>
-            <ul><p>Estadísticas</p></ul>
-            <ul><p>Chats</p></ul>
-            <ul><p>Ventas totales</p></ul>
         </div>
     </div>
 </body>
