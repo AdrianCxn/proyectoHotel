@@ -62,24 +62,32 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for restaurant in restaurant %}
+                        {% for reserva in reservas_restaurante %}
+                        {% with reserva.restaurant_set.first as restaurant_info %}
                         <tr>
-                            <td>{{ restaurant.id_rest }}</td>
-                            <td>{{ restaurant.id_staff.id_staff }} - {{ restaurant.id_staff.nombre }} {{ restaurant.id_staff.pr_apellido }}</td>
-                            <td>{{ restaurant.id_restaurant.id_huesped.id_huesped }} - {{ restaurant.id_restaurant.id_huesped.nombre }} {{ restaurant.id_restaurant.id_huesped.pr_apellido }}</td>
-							<td>{{ restaurant.id_restaurant.personas }}</td>
-							<td>{{ restaurant.id_restaurant.fecha }}</td>
-							<td>{{ restaurant.id_restaurant.hora}}</td>
-							<td>{% if restaurant.id_restaurant.activa %}Si{% else %}No{% endif %}</td>
+                            <td>{{ reserva.id_restaurant }}</td>
+                            <td>
+                                {% if restaurant_info and restaurant_info.id_staff %}
+                                    {{ restaurant_info.id_staff.id_staff }} - {{ restaurant_info.id_staff.nombre }} {{ restaurant_info.id_staff.pr_apellido }}
+                                {% else %}
+                                    Sin asignar
+                                {% endif %}
+                            </td>
+                            <td>{{ reserva.id_huesped.id_huesped }} - {{ reserva.id_huesped.nombre }} {{ reserva.id_huesped.pr_apellido }}</td>
+							<td>{{ reserva.personas }}</td>
+							<td>{{ reserva.fecha }}</td>
+							<td>{{ reserva.hora }}</td>
+							<td>{% if reserva.activa %}Si{% else %}No{% endif %}</td>
                             <td>
                                 <!-- Botón Editar -->
-								<a class="btn text-warning"
-									href="{% url 'editar_reserva_restaurante' restaurant.id_rest %}" title="Editar">
+								{% if restaurant_info %}
+                                <a class="btn text-warning"
+									href="{% url 'editar_reserva_restaurante' restaurant_info.id_rest %}" title="Editar">
 									<i class="material-icons">&#xE254;</i>
 								</a>
                         
 								<!-- Botón Eliminar -->
-								<form method="POST" action="{% url 'eliminar_reserva_restaurante' restaurant.id_rest %}"
+								<form method="POST" action="{% url 'eliminar_reserva_restaurante' restaurant_info.id_rest %}"
 									style="display:inline;">
 									{% csrf_token %}
 									<button type="submit" class="btn text-danger"
@@ -88,8 +96,12 @@
 										<i class="material-icons">&#xE872;</i>
 									</button>
 								</form>
+                                {% else %}
+                                <small class="text-muted">Asignar staff primero</small>
+                                {% endif %}
 							</td>
                         </tr>
+                        {% endwith %}
                         {% endfor %}
                     </tbody>
                 </table>

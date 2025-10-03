@@ -385,10 +385,35 @@ def eliminar_consumos(request, id):
 
 # Vista para restaurante
 def restaurante(request):
-    restaurant = Restaurant.objects.all()
+    # Sincronizar registros faltantes automáticamente
+    registros_creados = sincronizar_reservas_restaurant()
+    if registros_creados > 0:
+        messages.success(request, f"Se sincronizaron {registros_creados} reservas faltantes.")
+    
+    # Cambiar la consulta para mostrar TODAS las reservas, no solo las que tienen registro en Restaurant
+    from django.db.models import Prefetch
+    
+    # Obtener todas las reservas de restaurante con sus huéspedes y staff (si lo tienen)
+    reservas_restaurante = Rerestaurantes.objects.select_related('id_huesped').prefetch_related(
+        Prefetch('restaurant_set', queryset=Restaurant.objects.select_related('id_staff'))
+    ).all()
+    
     return render(request, "trivago/reserva_restaurante/restaurante.html", {
-        "restaurant": restaurant
+        "reservas_restaurante": reservas_restaurante,
     })
+
+
+def sincronizar_reservas_restaurant():
+    """Función utilitaria para crear registros faltantes en Restaurant"""
+    reservas_sin_restaurant = Rerestaurantes.objects.filter(restaurant__isnull=True)
+    
+    for reserva in reservas_sin_restaurant:
+        Restaurant.objects.create(
+            id_restaurant=reserva,
+            id_staff=None
+        )
+    
+    return reservas_sin_restaurant.count()
 
 
 def agregar_reserva_restaurante(request):
@@ -410,11 +435,14 @@ def agregar_reserva_restaurante(request):
             )
             nueva_reserva.save()
 
-            nuevo_restaurant = Restaurant(
-                id_restaurant=nueva_reserva,
-                id_staff=None  # aún no hay staff asignado
-            )
-            nuevo_restaurant.save()
+            # Crear entrada en Restaurant solo si no existe ya
+            if not Restaurant.objects.filter(id_restaurant=nueva_reserva).exists():
+                nuevo_restaurant = Restaurant(
+                    id_restaurant=nueva_reserva,
+                    id_staff=None  # aún no hay staff asignado
+                )
+                nuevo_restaurant.save()
+            
             messages.success(request, "Reserva creada exitosamente.")
             return redirect("restaurante")
 

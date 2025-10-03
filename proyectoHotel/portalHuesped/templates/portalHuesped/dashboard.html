@@ -11,7 +11,7 @@
 <body>
   <div class="main-container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1>Hola, {{ request.user.first_name }} {{ request.user.last_name }}</h1>
+  <h1>Hola, {{ request.user.first_name|capfirst }} {{ request.user.last_name|capfirst }}</h1>
       <div>
         <a href="{% url 'crear_reserva' %}" class="btn btn-success me-2" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Reserva</a>
         <a href="{% url 'comprar' %}" class="btn btn-primary me-2">Comprar Productos</a>
