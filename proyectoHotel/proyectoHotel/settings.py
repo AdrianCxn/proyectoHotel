@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'hotel_final',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'bahreindb123',
+        'PASSWORD': 'admin',
         'PORT': '3306',
     }
 }

@@ -146,7 +146,7 @@
 	<div class="main-container">
 		<div class="container">
 
-			<h1>Editar reserva ID: {{ reserva.id }} con fecha {{ reserva.fecha_llegada }} - {{ reserva.fecha_salida }}</h1>
+			<h1>Editar reserva ID: {{ reserva.id_reserva }} </h1>
 			{% if messages %}
 				<div class="messages">
 					{% for message in messages %}
@@ -158,43 +158,26 @@
 				{% csrf_token %}
 
 				<div class="mb-3">
-					<label class="form-label">Huésped</label>
-					<select name="huesped" class="form-control" required>
-						{% for h in huespedes %}
-							<option value="{{ h.id_huesped }}" {% if h.id_huesped == reserva.id_huesped.id_huesped %}selected{% endif %}>
-								{{ h.nombre }} {{ h.pr_apellido }} {{ h.se_apellido }}
+					<label class="form-label">Habitación</label>
+					<select name="habitacion" class="form-control" required>
+						{% for h in habitaciones %}
+							<option value="{{ h.id_habitacion }}"
+								{% if h.id_habitacion == reserva.id_habitacion.id_habitacion %}selected{% endif %}>
+								Habitación {{ h.numero }} | Tipo: {{ h.id_tipo.tipo }} | Precio: ${{ h.id_tipo.precio }}
 							</option>
 						{% endfor %}
 					</select>
 				</div>
 
-				<div class="mb-3">
-					<label class="form-label">Habitación</label>
-					<input type="number" name="habitacion" value="{{ reserva.id_habitacion.numero }}"
-						class="form-control" required>
-				</div>
-
-				<div class="mb-3">
-					<label class="form-label">Llegada</label>
-					<input type="datetime-local" name="llegada" value="{{ reserva.fecha_llegada|date:'Y-m-d\TH:i' }}"
-						class="form-control" required>
-				</div>
-
-				<div class="mb-3">
-					<label class="form-label">Salida</label>
-					<input type="datetime-local" name="salida" value="{{ reserva.fecha_salida|date:'Y-m-d\TH:i' }}"
-						class="form-control" required>
-				</div>
-
                 <div class="mb-3">
 					<label class="form-label">Cantidad Adultos</label>
-					<input type="number" name="cantidad_adultos"  value="{{ reserva.cantidad_a }}"
+					<input type="number" name="cantidad_a" id="cantidad_a" min="1" max="6" value="{{ reserva.cantidad_a }}"
 						class="form-control" placeholder="" required>
 				</div>
 
                 <div class="mb-3">
 					<label class="form-label">Cantidad Niños</label>
-					<input type="number" name="cantidad_ninos"  value="{{ reserva.cantidad_n }}"
+					<input type="number" name="cantidad_n" id="cantidad_n" min="0" max="5" value="{{ reserva.cantidad_n }}"
 						class="form-control" placeholder="" required>
 				</div>
 

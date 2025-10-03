@@ -320,17 +320,29 @@ def reservas(request):
 def editar_reserva(request, id):
     reserva = get_object_or_404(Reservas, pk=id)
     huespedes = Huespedes.objects.all()
-    
+    habitaciones = Habitaciones.objects.filter(ocupado=False) | Habitaciones.objects.filter(pk=reserva.id_habitacion.pk)
+
     if request.method == 'POST':
         id_habitacion = request.POST.get('habitacion')
-        reserva.id_habitacion = Habitaciones.objects.get(pk=id_habitacion)
+        habitacion = Habitaciones.objects.get(pk=id_habitacion)
         id_huesped = request.POST.get('huesped')
-        reserva.id_huesped = Huespedes.objects.get(pk=id_huesped)
-        reserva.llegada = request.POST.get('llegada')
-        reserva.salida = request.POST.get('salida')
-        reserva.cantidad_adultos = request.POST.get('cantidad_adultos')
-        reserva.cantidad_ninos = request.POST.get('cantidad_ninos')
-        reserva.capacidad_total = int(reserva.cantidad_adultos) + int(reserva.cantidad_ninos)
+        cantidad_a = int(request.POST.get('cantidad_a'))
+        cantidad_n = int(request.POST.get('cantidad_n') or 0)
+        capacidad_total = cantidad_a + cantidad_n
+
+        if cantidad_n > 0 and cantidad_a < 1:
+            messages.error(request, "Debe haber al menos un adulto si hay niños en la reserva.")
+            return redirect('editar_reserva', id=id)
+
+        if capacidad_total > habitacion.id_tipo.capacidad_total:
+            messages.error(request, f"La habitación seleccionada solo permite un máximo de {habitacion.id_tipo.capacidad_total} personas.")
+            return redirect('editar_reserva', id=id)
+
+        # Guardar cambios
+        reserva.id_habitacion = habitacion
+        reserva.cantidad_a = cantidad_a
+        reserva.cantidad_n = cantidad_n
+        reserva.capacidad_total = capacidad_total
         reserva.metodo_pago = request.POST.get('metodo_pago')
         reserva.activa = request.POST.get('estado')
 
@@ -345,9 +357,9 @@ def editar_reserva(request, id):
 
     return render(request, "trivago/reservas/editar_reserva.html", {
         "reserva": reserva,
-        "huespedes": huespedes
+        "huespedes": huespedes,
+        "habitaciones": habitaciones.distinct()
     })
-
 
 def eliminar_reserva(request, id):
     reserva = get_object_or_404(Reservas, pk=id)
