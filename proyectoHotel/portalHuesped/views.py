@@ -29,6 +29,16 @@ def registro(request):
             messages.error(request, 'Todos los campos obligatorios deben llenarse.')
             return redirect('registro_huesped')
 
+        # Verificación de edad mayor a 18 años
+        try:
+            edad_int = int(edad)
+            if edad_int <= 18:
+                messages.error(request, 'Debes tener más de 18 años para registrarte.')
+                return redirect('registro_huesped')
+        except ValueError:
+            messages.error(request, 'La edad debe ser un número válido.')
+            return redirect('registro_huesped')
+
         if User.objects.filter(username=username).exists():
             messages.error(request, 'El nombre de usuario ya está en uso.')
             return redirect('registro_huesped')
